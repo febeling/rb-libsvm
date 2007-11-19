@@ -12,3 +12,4 @@ spec:
 
 clean:
 	cd ext ; make clean
+	rm ext/Makefile

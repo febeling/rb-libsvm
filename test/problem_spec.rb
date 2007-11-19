@@ -1,12 +1,14 @@
 require "#{File.dirname(__FILE__)}/test_helper"
 require "libsvm"
 
-describe "Something" do
+include Libsvm
+
+describe "A Problem" do
   before do
-    @problem = Libsvm::Problem.new
+    @problem = Problem.new
   end
 
-  it "create" do
+  it "creates" do
     @problem.should_not be_nil
   end
 end

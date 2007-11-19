@@ -156,7 +156,7 @@ rx_def_accessor(cNode,struct svm_node,double,value);
 
 /* SvmParameter */
 
-void Init_libsvm() {
+void Init_libsvm_ext() {
   mLibsvm = rb_define_module("Libsvm");
 
   /* Libsvm::Problem */
