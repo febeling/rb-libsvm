@@ -3,9 +3,10 @@ require "libsvm"
 
 describe "Something" do
   before do
-    problem = Libsvm::Problem.new
+    @problem = Libsvm::Problem.new
   end
+
   it "create" do
-    problem.should_not be_nil
+    @problem.should_not be_nil
   end
 end

@@ -6,7 +6,7 @@
 #define rx_from_int(val) INT2NUM(val)
 #define rx_to_int(val) NUM2INT(val)
 #define rx_from_double(val) rb_float_new(val)
-#define rx_to_double(val) NUM2DBL(val)
+#define rx_to_double(val) rb_float_new(val)
 
 #define rx_def_accessor(CLASS,STRUCT,MEMBER_TYPE,ATTR)               \
 static VALUE CLASS ## _ ## ATTR(VALUE obj) {                         \
