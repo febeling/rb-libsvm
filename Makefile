@@ -4,7 +4,7 @@ all: ext/libsvm_ext.bundle spec
 ext/Makefile:
 	cd ext ; ruby extconf.rb
 
-ext/libsvm.bundle: ext/Makefile
+ext/libsvm_ext.bundle: ext/Makefile
 	cd ext ; make
 
 spec:
