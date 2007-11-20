@@ -23,4 +23,14 @@ describe "A Node" do
     @node.index.should == 0
     @node.value.should be_close(0, 0.00001)
   end
+
+  it "class can create nodes from an array" do
+    ary = Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
+    ary.map {|n| n.class.should == Node}
+    ary.map {|n| n.value}.should == [0.1, 0.2, 0.3, 0.4, 0.5]
+  end
+
+#   it "can be create using :to_feat" do
+#     [0.1, 0.2, 0.3, 0.4, 0.5].to_feat.should == Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
+#   end
 end

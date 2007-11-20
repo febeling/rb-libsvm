@@ -103,12 +103,13 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
     nodes_ary_len = rx_ary_size(nodes_ary); // example length.
     
     // allocate example.
-    *(prob->x+i) = (struct svm_node *)calloc(nodes_ary_len,sizeof(struct svm_node));
-    if(*(prob->x+i) == 0) {
+    prob->x++;
+    prob->x = (struct svm_node *)calloc(nodes_ary_len,sizeof(struct svm_node));
+    if(prob->x+i == 0) {
       rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
     }
 
-    // copy over each vector element.
+    // copy over each example/vector element.
     for(j = 0; j < nodes_ary_len; ++j) {
       Data_Get_Struct(rb_ary_entry(nodes_ary,j),struct svm_node,node_struct);
       memcpy(*(prob->x+j),node_struct,sizeof(struct svm_node));
