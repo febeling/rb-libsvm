@@ -1,6 +1,6 @@
 require 'mkmf'
 
-$CFLAGS << " -save-temps -ggdb "
+$CFLAGS << " -save-temps -ggdb3 "
 
 find_header('ruby.h')
 have_header('svm.h')
