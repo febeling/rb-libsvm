@@ -1,5 +1,5 @@
 
-all: ext/libsvm.bundle spec
+all: ext/libsvm_ext.bundle spec
 
 ext/Makefile:
 	cd ext ; ruby extconf.rb
