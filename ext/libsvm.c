@@ -13,6 +13,38 @@ VALUE cNode;
 VALUE cProblem;
 VALUE cSvmParameter;
 
+/* Libsvm::Node 
+struct svm_node
+{
+	int index;
+	double value;
+};
+*/
+static struct svm_node *node_new() {
+  struct svm_node *n;
+  n = (struct svm_node *) calloc(1,sizeof(struct svm_node));
+  if(n == NULL)
+    return NULL;
+  //  printf("node pointer: %x\n", n);
+  return n;
+}
+	
+static void node_free(struct svm_node *n) {
+  free(n);
+}
+
+static VALUE node_alloc(VALUE cls) {
+  struct svm_node *n;
+  n = node_new();
+  if(n == NULL)
+    rb_raise(rb_eNoMemError, "Not enough memory for allocating Node.");
+  
+  return Data_Wrap_Struct(cls, 0, node_free, n);
+}
+
+rx_def_accessor(cNode,struct svm_node,int,index);
+rx_def_accessor(cNode,struct svm_node,double,value);
+ 
 /* Libsvm::Problem
 struct svm_problem
 {
@@ -26,6 +58,7 @@ static struct svm_problem *problem_new() {
   n = (struct svm_problem *) calloc(1,sizeof(struct svm_problem));
   if(n == NULL)
     return NULL;
+  //  printf("problem pointer: %x\n", n);
   return n;
 }
 
@@ -33,7 +66,7 @@ static void problem_free(struct svm_problem *n) {
   int i;
   if(n->l > 0) {
     free(n->y);
-    for(i = 0; i < n->l; ++i) {
+    for(i = 0; i < (n->l); ++i) {
       free(*(n->x+i));
     }
     free(n->x);
@@ -69,24 +102,21 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
   int i, j, k, nodes_ary_len;
   VALUE label, node, nodes_ary;
 
-  // check that same number of labels and examples/feature vectors.
   num = rx_ary_size(labels_ary);
   if(num != rx_ary_size(nodes_arys_ary)) {
     rb_raise(rb_eArgError, "Number of labels (%i) does not match number of features (%i).", num, rx_ary_size(nodes_arys_ary));
   }
   
-  // get the struct to change.
   Data_Get_Struct(obj, struct svm_problem, prob); 
   
-  // free the old stuff away.
   if(prob->l > 0) {
     free(prob->y);
-    for(i = 0; i < num; ++i) {
+    for(i = 0; i < num+1; ++i) {
       free(*(prob->x+i));
     }
     free(prob->x);
   }
-  // make room for the pointers.
+
   prob->y = (double *)calloc(num,sizeof(double));
   if(prob->y == 0) {
     rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
@@ -95,25 +125,22 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
   if(prob->x == 0) {
     rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
   }
-  // copy the contents over.
-  for(i = 0; i < num; ++i) { // each example.
-    *(prob->y+i) = NUM2DBL(rb_ary_entry(labels_ary,i));
 
-    nodes_ary = rb_ary_entry(nodes_arys_ary,i); // the example.
-    nodes_ary_len = rx_ary_size(nodes_ary); // example length.
-    
-    // allocate example.
+  for(i = 0; i < num; ++i) {
+    *(prob->y+i) = NUM2DBL(rb_ary_entry(labels_ary,i));
+    nodes_ary_len = rx_ary_size(nodes_ary);
     *(prob->x+i) = (struct svm_node *)calloc(nodes_ary_len+1,sizeof(struct svm_node));
     if(*(prob->x+i) == 0) {
       rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
     }
-
-    // copy over each example/vector element.
+    nodes_ary = rb_ary_entry(nodes_arys_ary,i);
     for(j = 0; j < nodes_ary_len; ++j) {
-      Data_Get_Struct(rb_ary_entry(nodes_ary,j),struct svm_node,node_struct);
+      node = rb_ary_entry(nodes_ary,j);
+      Data_Get_Struct(node,struct svm_node,node_struct);
       memcpy(*(prob->x+i)+j,node_struct,sizeof(struct svm_node));
-    } 
-    memcpy(*(prob->x+i)+j+1,&Null_Node,sizeof(struct svm_node));
+    }
+    node_struct = *(prob->x+i)+j+1; // terminator.
+    node_struct = node_new();
   }
 
   prob->l = num;
@@ -121,36 +148,6 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
   return Qnil;
 }
 
-/* Libsvm::Node 
-struct svm_node
-{
-	int index;
-	double value;
-};
-*/
-static struct svm_node *node_new() {
-  struct svm_node *n;
-  n = (struct svm_node *) calloc(1,sizeof(struct svm_node));
-  if(n == NULL)
-    return NULL;
-  return n;
-}
-	
-static void node_free(struct svm_node *n) {
-  free(n);
-}
-
-static VALUE node_alloc(VALUE cls) {
-  struct svm_node *n;
-  n = node_new();
-  if(n == NULL)
-    rb_raise(rb_eNoMemError, "Not enough memory for allocating Node.");
-  
-  return Data_Wrap_Struct(cls, 0, node_free, n);
-}
-
-rx_def_accessor(cNode,struct svm_node,int,index);
-rx_def_accessor(cNode,struct svm_node,double,value);
 
 /* SvmParameter */
 
