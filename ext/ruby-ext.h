@@ -21,8 +21,7 @@ static VALUE CLASS ## _ ## ATTR ## _set(VALUE obj,VALUE val) {       \
   return Qnil;                                                       \
 }
 
-static VALUE rx_ary_size(VALUE ary) {
-  return NUM2INT(rb_funcall(ary, rb_intern("size"), 0));
-}
+#define rx_ary_size(ary) \
+  NUM2INT(rb_funcall((ary), rb_intern("size"), 0))
 
 
