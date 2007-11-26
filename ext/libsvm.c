@@ -102,6 +102,8 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
   int i, j, k, nodes_ary_len;
   VALUE label, node, nodes_ary;
 
+  rb_p(nodes_arys_ary);
+
   num = rx_ary_size(labels_ary);
   if(num != rx_ary_size(nodes_arys_ary)) {
     rb_raise(rb_eArgError, "Number of labels (%i) does not match number of features (%i).", num, rx_ary_size(nodes_arys_ary));
@@ -128,6 +130,7 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
 
   for(i = 0; i < num; ++i) {
     *(prob->y+i) = NUM2DBL(rb_ary_entry(labels_ary,i));
+    rb_p(rb_ary_entry(labels_ary,i));
     nodes_ary_len = rx_ary_size(nodes_ary);
     *(prob->x+i) = (struct svm_node *)calloc(nodes_ary_len+1,sizeof(struct svm_node));
     if(*(prob->x+i) == 0) {

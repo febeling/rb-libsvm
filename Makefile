@@ -1,18 +1,25 @@
 
+spec=`which spec`
+
 all: spec
+
+mkmf: ext/Makefile
 
 ext/Makefile:
 	cd ext ; ruby extconf.rb
 
-ext/libsvm_ext.bundle: ext/Makefile ext/libsvm.c
+libsvm_ext: ext/Makefile ext/libsvm.c
 	cd ext ; make
 
-spec: ext/libsvm_ext.bundle
+spec: libsvm_ext
 	spec test
 
-clean:
+clean:	
+	rm ext/Makefile ext/*.i ext/*.o ext/*.s ext/mkmf.log
 	cd ext ; make clean
-	rm ext/Makefile
 
-debug: ext/libsvm_ext.bundle
-	gdb --args ruby /opt/local/bin/spec test
+debug: libsvm_ext
+	gdb --args ruby ${spec} test
+
+valgrind: libsvm_ext
+	valgrind --suppressions=ferret_valgrind.supp --leak-check=full --show-reachable=yes ruby ${spec} test

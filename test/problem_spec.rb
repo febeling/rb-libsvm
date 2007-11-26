@@ -8,7 +8,7 @@ describe "A Problem" do
     @problem = Problem.new
   end
 
-  it "creates" do
+  it "can be instantiated" do
     @problem.should_not be_nil
   end
 
