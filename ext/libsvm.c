@@ -3,8 +3,6 @@
 #include "ruby-ext.h"
 #include <string.h>
 
-const struct svm_node Null_Node = { 0, 0.0 };
-
 VALUE mLibsvm;
 VALUE mKernelType;
 VALUE mSvmType;
@@ -25,7 +23,6 @@ static struct svm_node *node_new() {
   n = (struct svm_node *) calloc(1,sizeof(struct svm_node));
   if(n == NULL)
     return NULL;
-  //  printf("node pointer: %x\n", n);
   return n;
 }
 	
@@ -97,10 +94,12 @@ rx_def_accessor(cProblem,struct svm_problem,int,l);
 */
 static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_ary) {
   struct svm_problem *prob;
-  struct svm_node *node_struct;
+  struct svm_node *node_struct, terminator;
   VALUE num;
   int i, j, k, nodes_ary_len;
   VALUE label, node, nodes_ary;
+
+  terminator = (struct svm_node) { -1, 0.0 };
 
   num = rx_ary_size(labels_ary);
   if(num != rx_ary_size(nodes_arys_ary)) {
@@ -133,7 +132,7 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
     nodes_ary_len = rx_ary_size(nodes_ary);
     *(prob->x+i) = (struct svm_node *)calloc(nodes_ary_len+1,sizeof(struct svm_node));
     if(*(prob->x+i) == 0) {
-      rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
+      rb_raise(rb_eNoMemError, "on Libsvm::Node allocation" " %s:%i", __FILE__,__LINE__);
     }
 
     for(j = 0; j < nodes_ary_len; ++j) {
@@ -141,15 +140,64 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
       Data_Get_Struct(node,struct svm_node,node_struct);
       memcpy(*(prob->x+i)+j,node_struct,sizeof(struct svm_node));
     }
-    node_struct = *(prob->x+i)+j+1; // terminator.
-    node_struct = node_new();
+    memcpy(*(prob->x+i)+nodes_ary_len,&terminator,sizeof(struct svm_node));
   }
 
   prob->l = num;
 
-  return Qnil;
+  return INT2FIX(num);
 }
 
+/* 
+   call-seq:
+     labels, array_of_arrays = problem.examples
+
+   double *y; // class/label of the example
+   struct svm_node **x; 
+*/
+static VALUE cProblem_examples(VALUE problem) {
+  struct svm_problem *prob;
+  struct svm_node *node, *node_copy;
+  double label;
+  struct svm_node *features;
+  VALUE labels_ary, examples_ary, example_ary, v_node, result;
+  int i,n;
+
+  Data_Get_Struct(problem, struct svm_problem, prob); 
+
+  labels_ary = rb_ary_new2(prob->l);
+  examples_ary = rb_ary_new2(prob->l);
+  
+  features = (struct svm_node *)calloc(prob->l, sizeof(struct svm_node));
+  if(features == 0) {
+    rb_raise(rb_eNoMemError, "on allocating Libsvm::Node" " %s:%i", __FILE__,__LINE__);
+  }
+
+  for(i = 0; i < prob->l; ++i) {
+    label = *(prob->y+i);
+    rb_ary_push(labels_ary,rb_float_new(label));
+
+    node = *(prob->x+i); /* example start pointer */
+    example_ary = rb_ary_new();
+    while(node->index != -1) {
+      node_copy = (struct svm_node *)malloc(sizeof(struct svm_node));
+      if(node_copy == 0) {
+	rb_raise(rb_eNoMemError, "on allocating Libsvm::Node" " %s:%i", __FILE__,__LINE__);
+      }
+      memcpy(node_copy,node,sizeof(struct svm_node));
+      v_node = Data_Wrap_Struct(cNode,0,node_free,node_copy);
+      rb_ary_push(example_ary,v_node);
+      ++node;
+    }
+    rb_ary_push(examples_ary,example_ary);
+  }
+
+  result = rb_ary_new2(2);
+  rb_ary_push(result,labels_ary);
+  rb_ary_push(result,examples_ary);
+
+  return result;
+}
 
 /* SvmParameter */
 
@@ -161,6 +209,7 @@ void Init_libsvm_ext() {
   rb_define_alloc_func(cProblem, problem_alloc);
   rx_reg_accessor(cProblem,l);
   rb_define_method(cProblem,"set_examples",cProblem_examples_set,2);
+  rb_define_method(cProblem,"examples",cProblem_examples,0);
 
   /* Libsvm::SvmParameter */
   cSvmParameter = rb_define_class_under(mLibsvm, "SvmParameter", rb_cObject);

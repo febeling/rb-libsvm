@@ -12,11 +12,13 @@ libsvm_ext: ext/Makefile ext/libsvm.c
 	cd ext ; make
 
 spec: libsvm_ext
-	spec test
+	${spec} test
 
-clean:	
-	rm ext/Makefile ext/*.i ext/*.o ext/*.s ext/mkmf.log
+test: spec
+
+clean:
 	cd ext ; make clean
+	rm ext/Makefile ext/*.i ext/*.o ext/*.s ext/mkmf.log
 
 debug: libsvm_ext
 	gdb --args ruby ${spec} test
