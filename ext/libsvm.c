@@ -55,7 +55,6 @@ static struct svm_problem *problem_new() {
   n = (struct svm_problem *) calloc(1,sizeof(struct svm_problem));
   if(n == NULL)
     return NULL;
-  //  printf("problem pointer: %x\n", n);
   return n;
 }
 
