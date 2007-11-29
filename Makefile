@@ -3,6 +3,11 @@ spec=`which spec`
 
 all: spec
 
+pp: libsvm_ext
+	cp ext/libsvm.i libsvm_pp.c
+	astyle --style=kr libsvm_pp.c
+	less -p mLibsvm libsvm_pp.c
+
 mkmf: ext/Makefile
 
 ext/Makefile:
@@ -18,7 +23,7 @@ test: spec
 
 clean:
 	cd ext ; make clean
-	rm ext/Makefile ext/*.i ext/*.o ext/*.s ext/mkmf.log
+	rm ext/Makefile ext/mkmf.log 
 
 debug: libsvm_ext
 	gdb --args ruby ${spec} test

@@ -200,6 +200,61 @@ static VALUE cProblem_examples(VALUE problem) {
 
 /* SvmParameter */
 
+static struct svm_parameter *parameter_new() {
+  struct svm_parameter *n;
+  n = (struct svm_parameter *) calloc(1,sizeof(struct svm_parameter));
+  if(n == NULL)
+    return NULL;
+  return n;
+}
+	
+static void parameter_free(struct svm_parameter *n) {
+  free(n);
+}
+
+static VALUE parameter_alloc(VALUE cls) {
+  struct svm_parameter *n;
+  n = parameter_new();
+  if(n == NULL)
+    rb_raise(rb_eNoMemError, "Not enough memory for allocating SvmParameter.");
+  
+  return Data_Wrap_Struct(cls, 0, parameter_free, n);
+}
+
+/* 	int svm_type; */
+rx_def_accessor(cSvmParameter,struct svm_parameter,int,svm_type)
+
+/* 	int kernel_type; */
+rx_def_accessor(cSvmParameter,struct svm_parameter,int,kernel_type);
+/* 	int degree;	/\* for poly *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,int,degree);
+/* 	double gamma;	/\* for poly/rbf/sigmoid *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,gamma);
+/* 	double coef0;	/\* for poly/sigmoid *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,coef0);
+
+/* 	/\* these are for training only *\/ */
+/* 	double cache_size; /\* in MB *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,cache_size);
+/* 	double eps;	/\* stopping criteria *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,eps);
+/* 	double C;	/\* for C_SVC, EPSILON_SVR and NU_SVR *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,C);
+/* 	int nr_weight;		/\* for C_SVC *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,int,nr_weight);
+/* 	int *weight_label;	/\* for C_SVC *\/ */
+// TODO
+/* 	double* weight;		/\* for C_SVC *\/ */
+// TODO
+/* 	double nu;	/\* for NU_SVC, ONE_CLASS, and NU_SVR *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,nu);
+/* 	double p;	/\* for EPSILON_SVR *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,double,p);
+/* 	int shrinking;	/\* use the shrinking heuristics *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,int,shrinking);
+/* 	int probability; /\* do probability estimates *\/ */
+rx_def_accessor(cSvmParameter,struct svm_parameter,int,probability);
+
 void Init_libsvm_ext() {
   mLibsvm = rb_define_module("Libsvm");
 
@@ -212,6 +267,8 @@ void Init_libsvm_ext() {
 
   /* Libsvm::SvmParameter */
   cSvmParameter = rb_define_class_under(mLibsvm, "SvmParameter", rb_cObject);
+  rb_define_alloc_func(cSvmParameter, parameter_alloc);
+  rx_reg_accessor(cSvmParameter,svm_type);
 
   /* Libsvm::Node */
   cNode = rb_define_class_under(mLibsvm, "Node", rb_cObject);
