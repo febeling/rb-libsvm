@@ -66,6 +66,11 @@ describe "A Parameter has accessors for" do
 
 # /* 	double* weight;		/\* for C_SVC *\/ */
 # //  TODO rx_reg_accessor(cSvmParameter,weight);
+  it "can set and read weights (weight, weight_label, nr_weight members from struct)" do
+    @p.label_weights = {1=> 1.2, 3=>0.2, 5=>0.888}
+    @p.label_weights.should == {1=> 1.2, 3=>0.2, 5=>0.888}
+  end
+
 
   it "double nu" do
     @p.nu = 1.1

@@ -250,7 +250,7 @@ static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
   int i,len,weight_label;
   double weight;
   VALUE keys,key,val;
-  
+
   Data_Get_Struct(obj,struct svm_parameter,param);
 
   if(param->nr_weight > 0) {
@@ -258,27 +258,38 @@ static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
     free(param->weight_label);
   }
 
-  param->nr_weight = NUM2INT(rx_hash_size(weight_hash));
+  param->nr_weight = rx_hash_size(weight_hash);
   param->weight = (double *)calloc(param->nr_weight,sizeof(double));
   param->weight_label = (int *)calloc(param->nr_weight,sizeof(int));
 
   keys = rb_funcall(weight_hash, rb_intern("keys"),0);
+
   for(i = 0; i < param->nr_weight; ++i) {
     key = rb_ary_entry(keys,i);
     val = rb_hash_aref(weight_hash,key);
     
-    weight_label = NUM2INT(key);
-    weight = rb_float_new(val);
-
-    param->weight[i] = weight;
-    param->weight_label[i] = weight_label;
+    param->weight_label[i] = NUM2INT(key);
+    param->weight[i] = NUM2DBL(val);
   }
 
   return Qnil;
 }
 static VALUE cSvmParameter_label_weights(VALUE obj) {
-  // TODO
-  return Qnil;
+  struct svm_parameter *param; 
+  int i;
+  VALUE hash,key,val;
+
+  Data_Get_Struct(obj,struct svm_parameter,param);
+  
+  hash = rb_hash_new();
+
+  for(i = 0; i < param->nr_weight; ++i) {
+    key = INT2NUM(param->weight_label[i]);
+    val = rb_float_new(param->weight[i]);
+    rb_hash_aset(hash,key,val);
+  }
+
+  return hash;
 }
 
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,nu);
@@ -307,8 +318,8 @@ void Init_libsvm_ext() {
   rx_reg_accessor(cSvmParameter,cache_size);
   rx_reg_accessor(cSvmParameter,eps);
   rx_reg_accessor_as(cSvmParameter,C,c);
-  /*   rb_define_method(cSvmParameter,"label_weights=",cSvmParameter_label_weights_set,1); */
-  /*   rb_define_method(cSvmParameter,"label_weights",cSvmParameter_label_weight,0); */
+  rb_define_method(cSvmParameter,"label_weights=",cSvmParameter_label_weights_set,1);
+  rb_define_method(cSvmParameter,"label_weights",cSvmParameter_label_weights,0);
   rx_reg_accessor(cSvmParameter,nu);
   rx_reg_accessor(cSvmParameter,p);
   rx_reg_accessor(cSvmParameter,shrinking);
