@@ -226,14 +226,10 @@ rx_def_accessor(cSvmParameter,struct svm_parameter,int,kernel_type);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,degree);
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,gamma);
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,coef0);
-
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,cache_size);
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,eps);
-
-/* TODO	double C;	/\* for C_SVC, EPSILON_SVR and NU_SVR *\/ */
 rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
 
-//rx_def_accessor(cSvmParameter,struct svm_parameter,int,nr_weight);
 /* 	int *weight_label; 
 
     nr_weight, weight_label, and weight are used to change the penalty
@@ -249,16 +245,39 @@ rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
     just set nr_weight to 0.
 
 */
-//rx_def_accessor_ptr(cSvmParameter,struct svm_parameter,int,weight_label);
+static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
+  struct svm_parameter *param;
+  int i,len,weight_label;
+  double weight;
+  VALUE keys,key,val;
+  
+  Data_Get_Struct(obj,struct svm_parameter,param);
 
-/* 	double* weight;		/\* for C_SVC *\/ */
-// TODO
-static VALUE cSvmParameter_weight_set(VALUE obj,VALUE weight_hash) {
-  // write a function here which transforms a hash to 
-  // into the 2 arrays. then set nr_weight.
+  if(param->nr_weight > 0) {
+    free(param->weight);
+    free(param->weight_label);
+  }
+
+  param->nr_weight = NUM2INT(rx_hash_size(weight_hash));
+  param->weight = (double *)calloc(param->nr_weight,sizeof(double));
+  param->weight_label = (int *)calloc(param->nr_weight,sizeof(int));
+
+  keys = rb_funcall(weight_hash, rb_intern("keys"),0);
+  for(i = 0; i < param->nr_weight; ++i) {
+    key = rb_ary_entry(keys,i);
+    val = rb_hash_aref(weight_hash,key);
+    
+    weight_label = NUM2INT(key);
+    weight = rb_float_new(val);
+
+    param->weight[i] = weight;
+    param->weight_label[i] = weight_label;
+  }
+
   return Qnil;
 }
-static VALUE cSvmParameter_weight(VALUE obj) {
+static VALUE cSvmParameter_label_weights(VALUE obj) {
+  // TODO
   return Qnil;
 }
 
@@ -288,15 +307,8 @@ void Init_libsvm_ext() {
   rx_reg_accessor(cSvmParameter,cache_size);
   rx_reg_accessor(cSvmParameter,eps);
   rx_reg_accessor_as(cSvmParameter,C,c);
-
-  //  rx_reg_accessor(cSvmParameter,nr_weight);
-  /* 	int *weight_label;	/\* for C_SVC *\/ */
-  //  rx_reg_accessor(cSvmParameter,weight_label);
-  /* 	double *weight;		/\* for C_SVC *\/ */
-  //  TODO rx_reg_accessor(cSvmParameter,weight);
-/*   rb_define_method(cSvmParameter,"weight=",cSvmParameter_weight_set,1); */
-/*   rb_define_method(cSvmParameter,"weight",cSvmParameter_weight,0); */
-
+  /*   rb_define_method(cSvmParameter,"label_weights=",cSvmParameter_label_weights_set,1); */
+  /*   rb_define_method(cSvmParameter,"label_weights",cSvmParameter_label_weight,0); */
   rx_reg_accessor(cSvmParameter,nu);
   rx_reg_accessor(cSvmParameter,p);
   rx_reg_accessor(cSvmParameter,shrinking);
