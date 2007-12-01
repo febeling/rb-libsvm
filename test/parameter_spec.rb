@@ -48,14 +48,21 @@ describe "A Parameter has accessors for" do
 
 # /* 	double C;	/\* for C_SVC, EPSILON_SVR and NU_SVR *\/ */
 #   //TODO
-
-  it "int nr_weight" do
-    @p.nr_weight = 88
-    @p.nr_weight.should == 88
+  it "double C" do
+    @p.c = 3.141
+    @p.c.should == 3.141
   end
 
+#   it "int nr_weight" do
+#     @p.nr_weight = 88
+#     @p.nr_weight.should == 88
+#   end
 # /* 	int *weight_label;	/\* for C_SVC *\/ */
 # //  TODO rx_reg_accessor(cSvmParameter,weight_label);
+#   it "int *weight_label" do
+#     @p.weight_label = 66
+#     @p.weight_label.should == 66
+#   end
 
 # /* 	double* weight;		/\* for C_SVC *\/ */
 # //  TODO rx_reg_accessor(cSvmParameter,weight);

@@ -13,7 +13,7 @@ mkmf: ext/Makefile
 ext/Makefile:
 	cd ext ; ruby extconf.rb
 
-libsvm_ext: ext/Makefile ext/libsvm.c
+libsvm_ext: ext/Makefile ext/libsvm.c ext/ruby-ext.h
 	cd ext ; make
 
 spec: libsvm_ext
