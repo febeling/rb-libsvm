@@ -221,37 +221,50 @@ static VALUE parameter_alloc(VALUE cls) {
   return Data_Wrap_Struct(cls, 0, parameter_free, n);
 }
 
-/* 	int svm_type; */
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,svm_type)
-/* 	int kernel_type; */
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,kernel_type);
-/* 	int degree;	/\* for poly *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,degree);
-/* 	double gamma;	/\* for poly/rbf/sigmoid *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,gamma);
-/* 	double coef0;	/\* for poly/sigmoid *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,coef0);
 
-/* 	/\* these are for training only *\/ */
-/* 	double cache_size; /\* in MB *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,cache_size);
-/* 	double eps;	/\* stopping criteria *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,eps);
-/* 	double C;	/\* for C_SVC, EPSILON_SVR and NU_SVR *\/ */
-rx_def_accessor(cSvmParameter,struct svm_parameter,double,C);
-/* 	int nr_weight;		/\* for C_SVC *\/ */
-rx_def_accessor(cSvmParameter,struct svm_parameter,int,nr_weight);
-/* 	int *weight_label;	/\* for C_SVC *\/ */
-// TODO
+
+/* TODO	double C;	/\* for C_SVC, EPSILON_SVR and NU_SVR *\/ */
+rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
+
+//rx_def_accessor(cSvmParameter,struct svm_parameter,int,nr_weight);
+/* 	int *weight_label; 
+
+    nr_weight, weight_label, and weight are used to change the penalty
+    for some classes (If the weight for a class is not changed, it is
+    set to 1). This is useful for training classifier using unbalanced
+    input data or with asymmetric misclassification cost.
+
+    nr_weight is the number of elements in the array weight_label and
+    weight. Each weight[i] corresponds to weight_label[i], meaning that
+    the penalty of class weight_label[i] is scaled by a factor of weight[i].
+    
+    If you do not want to change penalty for any of the classes,
+    just set nr_weight to 0.
+
+*/
+//rx_def_accessor_ptr(cSvmParameter,struct svm_parameter,int,weight_label);
+
 /* 	double* weight;		/\* for C_SVC *\/ */
 // TODO
-/* 	double nu;	/\* for NU_SVC, ONE_CLASS, and NU_SVR *\/ */
+static VALUE cSvmParameter_weight_set(VALUE obj,VALUE weight_hash) {
+  // write a function here which transforms a hash to 
+  // into the 2 arrays. then set nr_weight.
+  return Qnil;
+}
+static VALUE cSvmParameter_weight(VALUE obj) {
+  return Qnil;
+}
+
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,nu);
-/* 	double p;	/\* for EPSILON_SVR *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,p);
-/* 	int shrinking;	/\* use the shrinking heuristics *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,shrinking);
-/* 	int probability; /\* do probability estimates *\/ */
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,probability);
 
 void Init_libsvm_ext() {
@@ -267,37 +280,26 @@ void Init_libsvm_ext() {
   /* Libsvm::SvmParameter */
   cSvmParameter = rb_define_class_under(mLibsvm, "SvmParameter", rb_cObject);
   rb_define_alloc_func(cSvmParameter, parameter_alloc);
-/* 	int svm_type; */
   rx_reg_accessor(cSvmParameter,svm_type);
-/* 	int kernel_type; */
   rx_reg_accessor(cSvmParameter,kernel_type);
-/* 	int degree;	/\* for poly *\/ */
   rx_reg_accessor(cSvmParameter,degree);
-/* 	double gamma;	/\* for poly/rbf/sigmoid *\/ */
   rx_reg_accessor(cSvmParameter,gamma);
-/* 	double coef0;	/\* for poly/sigmoid *\/ */
   rx_reg_accessor(cSvmParameter,coef0);
-
-/* 	/\* these are for training only *\/ */
-/* 	double cache_size; /\* in MB *\/ */
   rx_reg_accessor(cSvmParameter,cache_size);
-/* 	double eps;	/\* stopping criteria *\/ */
   rx_reg_accessor(cSvmParameter,eps);
-/* 	double C;	/\* for C_SVC, EPSILON_SVR and NU_SVR *\/ */
-  //TODO
-/* 	int nr_weight;		/\* for C_SVC *\/ */
-  rx_reg_accessor(cSvmParameter,nr_weight);
-/* 	int *weight_label;	/\* for C_SVC *\/ */
-//  TODO rx_reg_accessor(cSvmParameter,weight_label);
-/* 	double* weight;		/\* for C_SVC *\/ */
-//  TODO rx_reg_accessor(cSvmParameter,weight);
-/* 	double nu;	/\* for NU_SVC, ONE_CLASS, and NU_SVR *\/ */
+  rx_reg_accessor_as(cSvmParameter,C,c);
+
+  //  rx_reg_accessor(cSvmParameter,nr_weight);
+  /* 	int *weight_label;	/\* for C_SVC *\/ */
+  //  rx_reg_accessor(cSvmParameter,weight_label);
+  /* 	double *weight;		/\* for C_SVC *\/ */
+  //  TODO rx_reg_accessor(cSvmParameter,weight);
+/*   rb_define_method(cSvmParameter,"weight=",cSvmParameter_weight_set,1); */
+/*   rb_define_method(cSvmParameter,"weight",cSvmParameter_weight,0); */
+
   rx_reg_accessor(cSvmParameter,nu);
-/* 	double p;	/\* for EPSILON_SVR *\/ */
   rx_reg_accessor(cSvmParameter,p);
-/* 	int shrinking;	/\* use the shrinking heuristics *\/ */
   rx_reg_accessor(cSvmParameter,shrinking);
-/* 	int probability; /\* do probability estimates *\/ */
   rx_reg_accessor(cSvmParameter,probability);
 
   /* Libsvm::Node */
