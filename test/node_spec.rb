@@ -12,7 +12,7 @@ describe "A Node" do
     @node.should_not be_nil
   end
 
-  it "does not segfault on setting propertjies" do
+  it "does not segfault on setting properties" do
     @node.index = 99
     @node.index.should == 99
     @node.value = 3.141
@@ -30,7 +30,7 @@ describe "A Node" do
     ary.map {|n| n.value}.should == [0.1, 0.2, 0.3, 0.4, 0.5]
   end
 
-#   it "can be create using :to_feat" do
-#     [0.1, 0.2, 0.3, 0.4, 0.5].to_feat.should == Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
-#   end
+# it "can be create using :to_feat" do
+#   [0.1, 0.2, 0.3, 0.4, 0.5].to_feat.should == Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
+# end
 end
