@@ -10,7 +10,7 @@ pp: libsvm_ext
 
 mkmf: ext/Makefile
 
-ext/Makefile:
+ext/Makefile: ext/extconf.rb
 	cd ext ; ruby extconf.rb
 
 libsvm_ext: ext/Makefile ext/libsvm.c ext/ruby-ext.h

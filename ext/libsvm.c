@@ -4,19 +4,21 @@
 #include <string.h>
 
 VALUE mLibsvm;
-VALUE mKernelType;
-VALUE mSvmType;
 
 VALUE cNode;
 VALUE cProblem;
 VALUE cSvmParameter;
+VALUE cModel;
+
+VALUE mKernelType;
+VALUE mSvmType;
 
 /* Libsvm::Node 
-struct svm_node
-{
-	int index;
-	double value;
-};
+   struct svm_node
+   {
+   int index;
+   double value;
+   };
 */
 static struct svm_node *node_new() {
   struct svm_node *n;
@@ -43,12 +45,12 @@ rx_def_accessor(cNode,struct svm_node,int,index);
 rx_def_accessor(cNode,struct svm_node,double,value);
  
 /* Libsvm::Problem
-struct svm_problem
-{
-	int l;
-	double *y;           class/label of example
-	struct svm_node **x; features of example
-};
+   struct svm_problem
+   {
+   int l;
+   double *y;           class/label of example
+   struct svm_node **x; features of example
+   };
 */
 static struct svm_problem *problem_new() {
   struct svm_problem *n;
@@ -59,15 +61,25 @@ static struct svm_problem *problem_new() {
 }
 
 static void problem_free(struct svm_problem *n) {
-  int i;
-  if(n->l > 0) {
+  /* 
+     Deliberate no-op, because of this note from the README:
+
+     `*NOTE* Because svm_model contains pointers to svm_problem, you can
+     not free the memory used by svm_problem if you are still using the
+     svm_model produced by svm_train().'
+  */
+
+  /*
+    int i;
+    if(n->l > 0) {
     free(n->y);
     for(i = 0; i < (n->l); ++i) {
-      free(*(n->x+i));
+    free(*(n->x+i));
     }
     free(n->x);
-  }
-  free(n);
+    }
+    free(n);
+  */
 }
 
 static VALUE problem_alloc(VALUE cls) {
@@ -82,7 +94,7 @@ rx_def_accessor(cProblem,struct svm_problem,int,l);
 
 /* 
    call-seq:
-     problem.set_examples(labels, examples_array)
+   problem.set_examples(labels, examples_array)
 
    double *y; // class/label of the example
    struct svm_node **x; 
@@ -149,7 +161,7 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
 
 /* 
    call-seq:
-     labels, array_of_arrays = problem.examples
+   labels, array_of_arrays = problem.examples
 
    double *y; // class/label of the example
    struct svm_node **x; 
@@ -209,6 +221,7 @@ static struct svm_parameter *parameter_new() {
 }
 	
 static void parameter_free(struct svm_parameter *n) {
+  //  svm_destroy_param(n);
   free(n);
 }
 
@@ -297,6 +310,30 @@ rx_def_accessor(cSvmParameter,struct svm_parameter,double,p);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,shrinking);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,probability);
 
+/*  Libsvm::Model  */
+
+static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
+  const struct svm_problem *prob;
+  const struct svm_parameter *param;
+  struct svm_model *model;
+  const char *check_error;
+
+  Data_Get_Struct(problem,struct svm_problem,prob);
+  Data_Get_Struct(parameter,struct svm_parameter,param);
+  
+  check_error = svm_check_parameter(prob,param);
+  if(check_error != NULL) {
+    rb_raise(rb_eArgError, "Parameters not valid for Problem: '%s'", check_error);
+  }
+  model = svm_train(prob,param);
+
+  return Data_Wrap_Struct(cModel, 0, svm_destroy_model, model);
+}
+
+
+
+
+
 void Init_libsvm_ext() {
   mLibsvm = rb_define_module("Libsvm");
 
@@ -330,6 +367,13 @@ void Init_libsvm_ext() {
   rb_define_alloc_func(cNode, node_alloc);
   rx_reg_accessor(cNode,index);
   rx_reg_accessor(cNode,value);
+
+  /* Libsvm::Model */
+  cModel = rb_define_class_under(mLibsvm, "Model", rb_cObject);
+  //  rb_define_alloc_func(cModel,model_alloc);
+  rb_define_singleton_method(cModel,"train",cModel_class_train,2);
+  //  rb_define_singleton_method(cModel,"cross_validation",cModel_class_cross_validation,3);
+  //  rb_define_singleton_method(cModel,"load",cModel_class_load,1);
 
   mKernelType = rb_define_module_under(mLibsvm,"KernelType");
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
