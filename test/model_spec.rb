@@ -28,46 +28,49 @@ describe "The Libsvm::Model class interface" do
     model = Model.train(@problem,@parameter)
     model.should_not be_nil
   end
-#   it "can do cross-validation" do
-#     labels = Model.cross_validation(@problem,@parameter,@times)
-#     labels.should_not be_nil
-#   end
-#   it "can be loaded" do
-#     model = Model.load("svm_model.model")
-#     model.should_not be_nil
-#   end
+  #   it "can do cross-validation" do
+  #     labels = Model.cross_validation(@problem,@parameter,@times)
+  #     labels.should_not be_nil
+  #   end
+  #   it "can be loaded" do
+  #     model = Model.load("svm_model.model")
+  #     model.should_not be_nil
+  #   end
   before do
     @problem = create_problem
     @parameter = create_parameter
   end
 end
 
-# describe "An Libsvm model" do
-#   before do
-#     @problem = create_problem
-#     @parameter = Libsvm::SvmParameter.new
-#     @model = Model.train(@problem,@parameter)
-#   end
-#   it "can be saved to a file" do
-#     file_path = "svm_model.model"
-#     @model.save(file_path)
-#     File.exist?(file_path).should be_true
-#   end
-#   it "can be asked for it's svm_type" do
-#     @model.svm_type.should_not be_nil
-#   end
-#   it "can be asked for it's number of classes (aka. labels)" do
-#     @model.classes.should_not be_nil
-#   end
-#   it "can predict" do
-#     prediction = @model.predict(features)
-#     prediction.should_not be_nil
-#   end
-#   it "gets destroyed properly" do
-#     #?
-#   end
-  
-# end
+describe "An Libsvm model" do
+  before do
+    @problem = create_problem
+    @parameter = create_parameter
+    @model = Model.train(@problem,@parameter)
+  end
+  #   it "can be saved to a file" do
+  #     file_path = "svm_model.model"
+  #     @model.save(file_path)
+  #     File.exist?(file_path).should be_true
+  #   end
+  #   it "can be asked for it's svm_type" do
+  #     @model.svm_type.should_not be_nil
+  #   end
+  #   it "can be asked for it's number of classes (aka. labels)" do
+  #     @model.classes.should_not be_nil
+  #   end
+  it "can predict" do
+    prediction = @model.predict(create_example)
+    prediction.should_not be_nil
+  end
+  #   it "gets destroyed properly" do
+  #     #?
+  #   end
+end
+
+def create_example
+  Node.features([0.2,0.3,0.4,0.5])
+end
 
 def create_problem
   problem = Problem.new

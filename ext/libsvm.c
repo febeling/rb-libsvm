@@ -330,9 +330,9 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   return Data_Wrap_Struct(cModel, 0, svm_destroy_model, model);
 }
 
-
-
-
+static VALUE cModel_predict(VALUE obj,VALUE example) {
+  // create an example from an array
+}
 
 void Init_libsvm_ext() {
   mLibsvm = rb_define_module("Libsvm");
@@ -374,6 +374,9 @@ void Init_libsvm_ext() {
   rb_define_singleton_method(cModel,"train",cModel_class_train,2);
   //  rb_define_singleton_method(cModel,"cross_validation",cModel_class_cross_validation,3);
   //  rb_define_singleton_method(cModel,"load",cModel_class_load,1);
+  //  rb_define_method(cModel,"save",cModel_save,1);
+  //  rb_define_method(cModel,"svm_type",cModel_svm_type,0);
+  //  rb_define_method(cModel,"classes",cModel_classes,0);
 
   mKernelType = rb_define_module_under(mLibsvm,"KernelType");
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
