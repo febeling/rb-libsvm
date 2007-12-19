@@ -70,15 +70,15 @@ static void problem_free(struct svm_problem *n) {
   */
 
   /*
-    int i;
-    if(n->l > 0) {
+  int i;
+  if(n->l > 0) {
     free(n->y);
     for(i = 0; i < (n->l); ++i) {
-    free(*(n->x+i));
+      free(*(n->x+i));
     }
     free(n->x);
-    }
-    free(n);
+  }
+  free(n);
   */
 }
 
@@ -92,29 +92,78 @@ static VALUE problem_alloc(VALUE cls) {
 
 rx_def_accessor(cProblem,struct svm_problem,int,l);
 
+static struct svm_node *example_to_internal(VALUE example_ary)
+{
+  struct svm_node *x, *node_struct;
+  struct svm_node terminator;
+  int example_ary_len, j;
+  VALUE node;
+
+  terminator = (struct svm_node) { -1, 0.0 };
+
+  /* allocate memory for it */
+  example_ary_len = rx_ary_size(example_ary);
+  x = (struct svm_node *)calloc(example_ary_len+1,sizeof(struct svm_node));
+  if(x == 0) {
+    rb_raise(rb_eNoMemError, "on Libsvm::Node allocation" " %s:%i", __FILE__,__LINE__);
+  }
+  /* loop it's element nodes */
+  for(j = 0; j < example_ary_len; ++j) {
+    node = rb_ary_entry(example_ary,j);
+    Data_Get_Struct(node,struct svm_node,node_struct);
+    memcpy(x+j,node_struct,sizeof(struct svm_node));
+  }
+  /* add terminator */
+  memcpy(x+example_ary_len,&terminator,sizeof(struct svm_node));
+
+  return x;
+}
+
+static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
+{
+  struct svm_node ** x;
+  struct svm_node *node_struct;
+  VALUE nodes_ary, node, num;
+  int nodes_ary_len, i;
+
+  num = rx_ary_size(examples_ary);
+
+  x = (struct svm_node **)calloc(num,sizeof(struct svm_node *));
+  if(x == 0) {
+    rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
+  }
+  
+  for(i = 0; i < num; ++i) {
+    nodes_ary =     rb_ary_entry(examples_ary,i);
+    *(x+i) = example_to_internal(nodes_ary);
+  }
+
+  return x;
+}
+
 /* 
    call-seq:
-   problem.set_examples(labels, examples_array)
+     problem.set_examples(labels, examples_array)
 
-   double *y; // class/label of the example
-   struct svm_node **x; 
+     double *y; // class/label of the example
+     struct svm_node **x; 
 
    This method sets the contents of an SVM Problem, which consists
    of lables (or classifications) and examples (or feature vectors).
    If those 2 don't match in length and ArgumentError is raised.
 */
-static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_ary) {
+static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary) 
+{
   struct svm_problem *prob;
-  struct svm_node *node_struct, terminator;
+  struct svm_node *node_struct;
   VALUE num;
-  int i, j, k, nodes_ary_len;
+  int i, nodes_ary_len;
   VALUE label, node, nodes_ary;
 
-  terminator = (struct svm_node) { -1, 0.0 };
-
   num = rx_ary_size(labels_ary);
-  if(num != rx_ary_size(nodes_arys_ary)) {
-    rb_raise(rb_eArgError, "Number of labels (%i) does not match number of features (%i).", num, rx_ary_size(nodes_arys_ary));
+
+  if(num != rx_ary_size(examples_ary)) {
+    rb_raise(rb_eArgError, "Number of labels (%i) does not match number of features (%i).", num, rx_ary_size(examples_ary));
   }
 
   Data_Get_Struct(obj, struct svm_problem, prob); 
@@ -131,29 +180,12 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE nodes_arys_a
   if(prob->y == 0) {
     rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
   }
-  prob->x = (struct svm_node **)calloc(num,sizeof(struct svm_node *));
-  if(prob->x == 0) {
-    rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
-  }
 
   for(i = 0; i < num; ++i) {
     *(prob->y+i) =  NUM2DBL(rb_ary_entry(labels_ary,i));
-
-    nodes_ary =     rb_ary_entry(nodes_arys_ary,i);
-    nodes_ary_len = rx_ary_size(nodes_ary);
-    *(prob->x+i) = (struct svm_node *)calloc(nodes_ary_len+1,sizeof(struct svm_node));
-    if(*(prob->x+i) == 0) {
-      rb_raise(rb_eNoMemError, "on Libsvm::Node allocation" " %s:%i", __FILE__,__LINE__);
-    }
-
-    for(j = 0; j < nodes_ary_len; ++j) {
-      node = rb_ary_entry(nodes_ary,j);
-      Data_Get_Struct(node,struct svm_node,node_struct);
-      memcpy(*(prob->x+i)+j,node_struct,sizeof(struct svm_node));
-    }
-    memcpy(*(prob->x+i)+nodes_ary_len,&terminator,sizeof(struct svm_node));
   }
 
+  prob->x = examples_ary_to_internal(examples_ary);
   prob->l = num;
 
   return INT2FIX(num);
