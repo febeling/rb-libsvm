@@ -98,10 +98,10 @@ describe "An Libsvm model" do
   #     @model.classes.should_not be_nil
   #   end
 
-#   it "can predict" do
-#     prediction = @model.predict(create_example)
-#     prediction.should_not be_nil
-#   end
+  it "can predict" do
+    prediction = @model.predict(create_example)
+    prediction.should_not be_nil
+  end
 
   #   it "gets destroyed properly" do
   #     #?

@@ -13,6 +13,8 @@ VALUE cModel;
 VALUE mKernelType;
 VALUE mSvmType;
 
+const struct svm_node TERMINATOR = (struct svm_node) { -1, 0.0 };
+
 /* Libsvm::Node 
    struct svm_node
    {
@@ -95,11 +97,8 @@ rx_def_accessor(cProblem,struct svm_problem,int,l);
 static struct svm_node *example_to_internal(VALUE example_ary)
 {
   struct svm_node *x, *node_struct;
-  struct svm_node terminator;
   int example_ary_len, j;
   VALUE node;
-
-  terminator = (struct svm_node) { -1, 0.0 };
 
   /* allocate memory for it */
   example_ary_len = rx_ary_size(example_ary);
@@ -114,14 +113,14 @@ static struct svm_node *example_to_internal(VALUE example_ary)
     memcpy(x+j,node_struct,sizeof(struct svm_node));
   }
   /* add terminator */
-  memcpy(x+example_ary_len,&terminator,sizeof(struct svm_node));
+  memcpy(x+example_ary_len,&TERMINATOR,sizeof(struct svm_node));
 
   return x;
 }
 
 static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
 {
-  struct svm_node ** x;
+  struct svm_node **x;
   struct svm_node *node_struct;
   VALUE nodes_ary, node, num;
   int nodes_ary_len, i;
@@ -145,8 +144,8 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
    call-seq:
      problem.set_examples(labels, examples_array)
 
-     double *y; // class/label of the example
-     struct svm_node **x; 
+     double *y;            // class (aka. label) of the example
+     struct svm_node **x;  // examples
 
    This method sets the contents of an SVM Problem, which consists
    of lables (or classifications) and examples (or feature vectors).
@@ -350,10 +349,10 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   struct svm_model *model;
   const char *check_error;
 
-  Data_Get_Struct(problem,struct svm_problem,prob);
-  Data_Get_Struct(parameter,struct svm_parameter,param);
+  Data_Get_Struct(problem, struct svm_problem, prob);
+  Data_Get_Struct(parameter, struct svm_parameter, param);
   
-  check_error = svm_check_parameter(prob,param);
+  check_error = svm_check_parameter(prob, param);
   if(check_error != NULL) {
     rb_raise(rb_eArgError, "Parameters not valid for Problem: '%s'", check_error);
   }
@@ -363,7 +362,15 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
 }
 
 static VALUE cModel_predict(VALUE obj,VALUE example) {
-  // create an example from an array
+  struct svm_node *x;
+  struct svm_model *model;
+  double class;
+  
+  x = example_to_internal(example);
+  Data_Get_Struct(obj, struct svm_model, model);
+  class = svm_predict(model, x);
+  
+  return rb_float_new(class);
 }
 
 void Init_libsvm_ext() {
@@ -372,9 +379,9 @@ void Init_libsvm_ext() {
   /* Libsvm::Problem */
   cProblem = rb_define_class_under(mLibsvm, "Problem", rb_cObject);
   rb_define_alloc_func(cProblem, problem_alloc);
-  rx_reg_accessor(cProblem,l);
-  rb_define_method(cProblem,"set_examples",cProblem_examples_set,2);
-  rb_define_method(cProblem,"examples",cProblem_examples,0);
+  rx_reg_accessor(cProblem, l);
+  rb_define_method(cProblem, "set_examples", cProblem_examples_set, 2);
+  rb_define_method(cProblem, "examples", cProblem_examples, 0);
 
   /* Libsvm::SvmParameter */
   cSvmParameter = rb_define_class_under(mLibsvm, "SvmParameter", rb_cObject);
@@ -403,12 +410,13 @@ void Init_libsvm_ext() {
   /* Libsvm::Model */
   cModel = rb_define_class_under(mLibsvm, "Model", rb_cObject);
   //  rb_define_alloc_func(cModel,model_alloc);
-  rb_define_singleton_method(cModel,"train",cModel_class_train,2);
+  rb_define_singleton_method(cModel, "train", cModel_class_train, 2);
   //  rb_define_singleton_method(cModel,"cross_validation",cModel_class_cross_validation,3);
   //  rb_define_singleton_method(cModel,"load",cModel_class_load,1);
   //  rb_define_method(cModel,"save",cModel_save,1);
   //  rb_define_method(cModel,"svm_type",cModel_svm_type,0);
   //  rb_define_method(cModel,"classes",cModel_classes,0);
+  rb_define_method(cModel, "predict", cModel_predict, 1);
 
   mKernelType = rb_define_module_under(mLibsvm,"KernelType");
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
