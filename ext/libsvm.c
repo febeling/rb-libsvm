@@ -373,6 +373,53 @@ static VALUE cModel_predict(VALUE obj,VALUE example) {
   return rb_float_new(class);
 }
 
+static VALUE cModel_save(VALUE obj, VALUE filename)
+{
+  const struct svm_model *model;
+  const char *path;
+  int rc; 
+
+  Data_Get_Struct(obj, struct svm_model, model);
+  path = StringValueCStr(filename);
+  
+  if(rc = svm_save_model(path, model)) {
+    rb_raise(rb_eStandardError, "Error on saving model, code: %i", rc);
+  }
+  
+  return Qnil;
+}
+
+static VALUE cModel_svm_type(VALUE obj)
+{
+  const struct svm_model *model;
+  Data_Get_Struct(obj, struct svm_model, model);
+  return INT2NUM(svm_get_svm_type(model));
+}
+
+static VALUE cModel_classes(VALUE obj) 
+{
+  const struct svm_model *model;
+  Data_Get_Struct(obj, struct svm_model, model);
+  return INT2NUM(svm_get_nr_class(model));
+}
+
+static VALUE cModel_class_load(VALUE cls, VALUE filename)
+{
+  const struct svm_model *model;
+  const char *path;
+  model = svm_load_model(StringValueCStr(filename));
+  return Data_Wrap_Struct(cModel, 0, svm_destroy_model, model);
+}
+
+static VALUE cModel_class_cross_validation(VALUE obj, VALUE problem, VALUE parameter, VALUE num_fold, VALUE target)
+{
+  // CONTINUE HERE.
+
+  // void svm_cross_validation(const struct svm_problem *prob, const struct svm_parameter *param, int nr_fold, double *target);
+
+  return Qnil;
+}
+
 void Init_libsvm_ext() {
   mLibsvm = rb_define_module("Libsvm");
 
@@ -409,16 +456,17 @@ void Init_libsvm_ext() {
 
   /* Libsvm::Model */
   cModel = rb_define_class_under(mLibsvm, "Model", rb_cObject);
-  //  rb_define_alloc_func(cModel,model_alloc);
+  //  rb_define_alloc_func(cModel,model_alloc); // not necessary!
   rb_define_singleton_method(cModel, "train", cModel_class_train, 2);
-  //  rb_define_singleton_method(cModel,"cross_validation",cModel_class_cross_validation,3);
-  //  rb_define_singleton_method(cModel,"load",cModel_class_load,1);
-  //  rb_define_method(cModel,"save",cModel_save,1);
-  //  rb_define_method(cModel,"svm_type",cModel_svm_type,0);
-  //  rb_define_method(cModel,"classes",cModel_classes,0);
+  rb_define_singleton_method(cModel,"cross_validation",cModel_class_cross_validation,3);
+  rb_define_singleton_method(cModel, "load", cModel_class_load, 1);
+  rb_define_method(cModel, "save", cModel_save, 1);
+  rb_define_method(cModel,"svm_type",cModel_svm_type,0);
+  rb_define_method(cModel,"classes",cModel_classes,0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
+  // rb_define_method(cModel, "labels", cModel_labels, 0);
 
-  mKernelType = rb_define_module_under(mLibsvm,"KernelType");
+  mKernelType = rb_define_module_under(mLibsvm, "KernelType");
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
   rb_define_const(mKernelType, "POLY", INT2NUM(POLY));
   rb_define_const(mKernelType, "RBF", INT2NUM(RBF));

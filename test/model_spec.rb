@@ -63,16 +63,29 @@ describe "The Libsvm::Model class interface" do
     model.should_not be_nil
   end
 
-  #   it "can do cross-validation" do
-  #     labels = Model.cross_validation(@problem,@parameter,@times)
-  #     labels.should_not be_nil
-  #   end
+  it "can do cross-validation" do
+    labels = Model.cross_validation(@problem, @parameter, @times)
+    labels.should_not be_nil
+  end
+end
 
-  #   it "can be loaded" do
-  #     model = Model.load("svm_model.model")
-  #     model.should_not be_nil
-  #   end
+describe "A saved model" do
+  include ModelSpecHelper
 
+  before do
+    @filename = "svm_model.model"
+    model = Model.train(create_problem, create_parameter)
+    model.save(@filename)
+  end
+
+  it "can be loaded" do
+    model = Model.load(@filename)
+    model.should_not be_nil
+  end
+
+  after do
+    File.delete(@filename) rescue nil
+  end
 end
 
 describe "An Libsvm model" do
@@ -81,31 +94,26 @@ describe "An Libsvm model" do
   before do
     @problem = create_problem
     @parameter = create_parameter
-    @model = Model.train(@problem,@parameter)
+    @model = Model.train(@problem, @parameter)
   end
 
-  #   it "can be saved to a file" do
-  #     file_path = "svm_model.model"
-  #     @model.save(file_path)
-  #     File.exist?(file_path).should be_true
-  #   end
+  it "can be saved to a file" do
+    file_path = "svm_model.model"
+    @model.save(file_path)
+    File.exist?(file_path).should be_true
+  end
 
-  #   it "can be asked for it's svm_type" do
-  #     @model.svm_type.should_not be_nil
-  #   end
+  it "can be asked for it's svm_type" do
+    @model.svm_type.should == SvmType::C_SVC
+  end
 
-  #   it "can be asked for it's number of classes (aka. labels)" do
-  #     @model.classes.should_not be_nil
-  #   end
+  it "can be asked for it's number of classes (aka. labels)" do
+    @model.classes.should == 2
+  end
 
   it "can predict" do
     prediction = @model.predict(create_example)
     prediction.should_not be_nil
   end
-
-  #   it "gets destroyed properly" do
-  #     #?
-  #   end
-
 end
 
