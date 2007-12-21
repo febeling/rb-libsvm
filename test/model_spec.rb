@@ -64,8 +64,8 @@ describe "The Libsvm::Model class interface" do
   end
 
   it "can do cross-validation" do
-    labels = Model.cross_validation(@problem, @parameter, @times)
-    labels.should_not be_nil
+    labels = Model.cross_validation(@problem, @parameter, fold=2)
+    labels.should == [anything, anything, anything, anything]
   end
 end
 

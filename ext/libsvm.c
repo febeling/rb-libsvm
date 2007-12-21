@@ -405,19 +405,41 @@ static VALUE cModel_classes(VALUE obj)
 
 static VALUE cModel_class_load(VALUE cls, VALUE filename)
 {
-  const struct svm_model *model;
-  const char *path;
-  model = svm_load_model(StringValueCStr(filename));
+  struct svm_model *model;
+  char *path;
+  path = StringValueCStr(filename);
+  model = svm_load_model(path);
   return Data_Wrap_Struct(cModel, 0, svm_destroy_model, model);
 }
 
-static VALUE cModel_class_cross_validation(VALUE obj, VALUE problem, VALUE parameter, VALUE num_fold, VALUE target)
+static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE parameter, VALUE num_fold)
 {
-  // CONTINUE HERE.
+  const struct svm_problem *prob;
+  const struct svm_parameter *param;
+  int nr_fold, i;
+  double *target_ptr;
+  VALUE target;
 
-  // void svm_cross_validation(const struct svm_problem *prob, const struct svm_parameter *param, int nr_fold, double *target);
+  Data_Get_Struct(problem, struct svm_problem, prob);
+  Data_Get_Struct(parameter, struct svm_parameter, param);
+  
+  nr_fold = NUM2INT(num_fold);
 
-  return Qnil;
+  target = rb_ary_new2(prob->l);
+  target_ptr = (double *)calloc(prob->l, sizeof(double));
+  if(target_ptr == 0) {
+    rb_raise(rb_eNoMemError, "on cross-validation result allocation" " %s:%i", __FILE__,__LINE__);
+  }
+
+  svm_cross_validation(prob, param, nr_fold, target_ptr);
+
+  for(i = 0; i < prob->l; ++i) {
+    rb_ary_push(target, rb_float_new(*(target_ptr+i)));
+  }
+
+  free(target_ptr);
+
+  return target;
 }
 
 void Init_libsvm_ext() {
