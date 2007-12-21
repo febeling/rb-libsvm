@@ -478,15 +478,24 @@ void Init_libsvm_ext() {
 
   /* Libsvm::Model */
   cModel = rb_define_class_under(mLibsvm, "Model", rb_cObject);
-  //  rb_define_alloc_func(cModel,model_alloc); // not necessary!
+  // model_alloc not necessary, since we don't ever create, only wrap it.
   rb_define_singleton_method(cModel, "train", cModel_class_train, 2);
-  rb_define_singleton_method(cModel,"cross_validation",cModel_class_cross_validation,3);
+  rb_define_singleton_method(cModel, "cross_validation", cModel_class_cross_validation, 3);
   rb_define_singleton_method(cModel, "load", cModel_class_load, 1);
   rb_define_method(cModel, "save", cModel_save, 1);
-  rb_define_method(cModel,"svm_type",cModel_svm_type,0);
-  rb_define_method(cModel,"classes",cModel_classes,0);
+  rb_define_method(cModel, "svm_type", cModel_svm_type, 0);
+  rb_define_method(cModel, "classes", cModel_classes, 0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
-  // rb_define_method(cModel, "labels", cModel_labels, 0);
+
+  /*
+  Not covered for various reasons:
+    TODO - void svm_get_labels(const struct svm_model *model, int *label); 
+    SVR? - double svm_get_svr_probability(const struct svm_model *model);
+    SVR? - double svm_predict_probability(const struct svm_model *model, const struct svm_node *x, double* prob_estimates);
+    Model holds reference to this, so when to use it?
+           void svm_destroy_param(struct svm_parameter *param);
+    SVR? - int svm_check_probability_model(const struct svm_model *model);
+  */
 
   mKernelType = rb_define_module_under(mLibsvm, "KernelType");
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));

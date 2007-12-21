@@ -15,7 +15,7 @@ describe "A Problem" do
                 Node.features([0.2,0.2,0.6,0.5]),
                 Node.features([0.3,0.1,0.5,0.9])]
     @problem.set_examples([1,2,1,2], features)
-    labels,examples =  @problem.examples
+    labels, examples =  @problem.examples
     labels.size.should == 4
     examples.size.should == 4
     examples.map {|x|x.size}.should == [4,4,4,4]

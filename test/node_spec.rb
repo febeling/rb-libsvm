@@ -27,10 +27,23 @@ describe "A Node" do
   it "class can create nodes from an array" do
     ary = Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
     ary.map {|n| n.class.should == Node}
-    ary.map {|n| n.value}.should == [0.1, 0.2, 0.3, 0.4, 0.5]
+    ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
   end
 
-# it "can be create using :to_feat" do
-#   [0.1, 0.2, 0.3, 0.4, 0.5].to_feat.should == Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
-# end
+  it "class can create nodes from variable parameters" do
+    ary = Node.features(0.1, 0.2, 0.3, 0.4, 0.5)
+    ary.map {|n| n.class.should == Node}
+    ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
+  end
+
+  it "class can create nodes from hash" do
+    ary = Node.features({3=>0.3, 5=>0.5, 6=>0.6, 10=>1.0})
+    ary.map {|n| n.class.should == Node}
+    ary.map {|n| n.value }.sort.should == [0.3, 0.5, 0.6, 1.0]
+    ary.map {|n| n.index }.sort.should == [3, 5, 6, 10]
+  end
+
+  # it "can be create using :to_feat" do
+  #   [0.1, 0.2, 0.3, 0.4, 0.5].to_feat.should == Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
+  # end
 end
