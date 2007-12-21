@@ -39,3 +39,4 @@ module Libsvm
   end # class Node
 
 end
+
