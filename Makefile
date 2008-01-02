@@ -1,4 +1,6 @@
 
+.PHONY : clean
+
 spec=`which spec`
 
 all: spec
@@ -22,8 +24,8 @@ spec: libsvm_ext
 test: spec
 
 clean:
-	cd ext ; make clean
-	rm ext/Makefile ext/mkmf.log 
+	cd ext ; rm -f *.o *.a *.dylib *.s *.i
+	rm -f ext/Makefile ext/mkmf.log 
 
 debug: libsvm_ext
 	gdb --args ruby ${spec} test
