@@ -5,7 +5,19 @@ include Libsvm
 
 describe "A Node" do
   before do
-    @node = Node.new
+    @node = ''#Node.new
+  end
+
+  def crashes
+    raise "in method"
+  end
+
+  it "fails" do
+    instance_eval("raise('problem')")
+  end
+
+  it "crashes" do
+    instance_eval('crashes')
   end
 
   it "can be created" do
