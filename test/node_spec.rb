@@ -59,7 +59,7 @@ describe "A Node" do
   end
 
   it "class can create nodes from hash" do
-    ary = Node.features({3=>0.3, 5=>0.5, 6=>0.6, 10=>1.0})
+    ary = Node.features(3=>0.3, 5=>0.5, 6=>0.6, 10=>1.0)
     ary.map {|n| n.class.should == Node}
     ary.map {|n| n.value }.sort.should == [0.3, 0.5, 0.6, 1.0]
     ary.map {|n| n.index }.sort.should == [3, 5, 6, 10]
