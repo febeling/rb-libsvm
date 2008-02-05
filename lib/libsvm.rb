@@ -2,7 +2,16 @@ require 'libsvm_ext'
 
 module Libsvm
 
+  module CoreExtensions
+    module Collection
+      def to_example
+        Node.features(self)
+      end
+    end
+  end
+
   class Node
+
     class << self
 
       def features(*vargs)
@@ -20,7 +29,7 @@ module Libsvm
             end
             return nodes
           else 
-            raise(ArgumentError.new("Argument has to be Hash, Array or various Floats."))
+            raise(ArgumentError.new("Argument has to be Hash, Array or Float varargs."))
           end
         else
           ary = vargs
@@ -35,8 +44,27 @@ module Libsvm
         end
       end
 
+      def [](index, value)
+        new(index, value)
+      end
     end
-  end # class Node
+
+    def initialize(index=0, value=0.0)
+      self.index = index
+      self.value = value
+    end
+
+    def ==(other)
+      index == other.index && value == other.value
+    end
+  end
 
 end
 
+
+class Hash
+  include Libsvm::CoreExtensions::Collection
+end
+class Array
+  include Libsvm::CoreExtensions::Collection
+end

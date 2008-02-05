@@ -16,6 +16,11 @@ describe "Basic usage" do
     @parameter.c = 10
   end
 
+  it "has a nice API" do
+    example = {11 => 0.11, 21 => 0.21, 101 => 0.99 }.to_example
+    example.should == Node.features({11 => 0.11, 21 => 0.21, 101 => 0.99 })
+  end
+
   it "is as in [PCI,217]" do
     examples = [ [1,0,1], [-1,0,-1] ].map {|ary| Node.features(ary) }
     labels = [1, -1]

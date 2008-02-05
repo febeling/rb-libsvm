@@ -3,6 +3,28 @@ require "libsvm"
 
 include Libsvm
 
+describe "construction of a Node" do
+  it "using the properties" do
+    n = Node.new
+    n.index = 11
+    n.value = 0.11
+    n.index.should == 11
+    n.value.should be_close(0.11, 0.0001)
+  end
+
+  it "using the :[] method" do
+    n = Node[12, 0.12]
+    n.index.should == 12
+    n.value.should be_close(0.12, 0.00001)
+  end
+
+  it "using the constructor parameters" do
+    n = Node.new(14, 0.14)
+    n.index.should == 14
+    n.value.should be_close(0.14, 0.0001)
+  end
+end
+
 describe "A Node" do
   before do
     @node = Node.new
@@ -32,7 +54,7 @@ describe "A Node" do
 
   it "class can create nodes from variable parameters" do
     ary = Node.features(0.1, 0.2, 0.3, 0.4, 0.5)
-    ary.map {|n| n.class.should == Node}
+    ary.map {|n| Node.should === n }
     ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
   end
 
@@ -43,7 +65,7 @@ describe "A Node" do
     ary.map {|n| n.index }.sort.should == [3, 5, 6, 10]
   end
 
-  # it "can be create using :to_feat" do
-  #   [0.1, 0.2, 0.3, 0.4, 0.5].to_feat.should == Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
-  # end
+  it "implements a value-like equality, not identity-notion" do
+    Node[1, 0.1].should == Node[1, 0.1]
+  end
 end
