@@ -17,6 +17,7 @@ ext/Makefile: ext/extconf.rb
 
 libsvm_ext: ext/Makefile ext/libsvm.c ext/ruby-ext.h
 	cd ext ; make
+	cp ext/libsvm_ext.bundle lib
 
 spec: libsvm_ext
 	${spec} test
