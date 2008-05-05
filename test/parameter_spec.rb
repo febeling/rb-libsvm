@@ -9,7 +9,7 @@ describe "A Parameter has accessors for" do
   end
   it "int svm_type" do
     SvmType::C_SVC.should == 0
-    @p.svm_type = Libsvm::SvmType::C_SVC
+    @p.svm_type = SvmType::C_SVC
     @p.svm_type.should == SvmType::C_SVC
   end
 
