@@ -1,0 +1,28 @@
+h1. rb-libsvm -- Ruby language bindings for LIBSVM
+
+This is a module which provides a Ruby API to the LIBSVM [1] library.
+SVM is a machine learning and classification algorithm, and LIBSVM is
+a popular free implementation of it, written by Chih-Chung Chang and
+Chih-Jen Lin, of National Taiwan University, Taipei. See "Programming
+Collective Intelligence," [2] among others, for a usage example.
+
+Note: There exists another Ruby binding for LIBSVM, named Ruby SVM
+[3], written by Rudi Cilibrasi. (That's the one mentioned in the
+libsvm documentation.) This package is not related but written
+independently and from scratch.
+
+h2. Dependencies
+
+rb-libsvm needs a Ruby installation including C header file and the
+LIBSVM library itself.
+
+h2. Author, License
+
+Written by C. Florian Ebeling. This software can be freely used under
+the terms of the MIT license, see file MIT-LICENSE.
+
+h3. Notes
+
+fn1. http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+fn2. http://books.google.com/books?id=fEsZ3Ey-Hq4C
+fn3. http://rubysvm.cilibrar.com/
