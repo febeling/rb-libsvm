@@ -15,13 +15,7 @@ VALUE mSvmType;
 
 const struct svm_node TERMINATOR = (struct svm_node) { -1, 0.0 };
 
-/* Libsvm::Node 
-   struct svm_node
-   {
-   int index;
-   double value;
-   };
-*/
+/* Libsvm::Node */
 static struct svm_node *node_new() {
   struct svm_node *n;
   n = (struct svm_node *) calloc(1,sizeof(struct svm_node));
@@ -46,14 +40,7 @@ static VALUE node_alloc(VALUE cls) {
 rx_def_accessor(cNode,struct svm_node,int,index);
 rx_def_accessor(cNode,struct svm_node,double,value);
  
-/* Libsvm::Problem
-   struct svm_problem
-   {
-   int l;
-   double *y;           class/label of example
-   struct svm_node **x; features of example
-   };
-*/
+/* Libsvm::Problem */
 static struct svm_problem *problem_new() {
   struct svm_problem *n;
   n = (struct svm_problem *) calloc(1,sizeof(struct svm_problem));
@@ -69,18 +56,6 @@ static void problem_free(struct svm_problem *n) {
      `*NOTE* Because svm_model contains pointers to svm_problem, you can
      not free the memory used by svm_problem if you are still using the
      svm_model produced by svm_train().'
-  */
-
-  /*
-  int i;
-  if(n->l > 0) {
-    free(n->y);
-    for(i = 0; i < (n->l); ++i) {
-      free(*(n->x+i));
-    }
-    free(n->x);
-  }
-  free(n);
   */
 }
 
@@ -318,6 +293,7 @@ static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
 
   return Qnil;
 }
+
 static VALUE cSvmParameter_label_weights(VALUE obj) {
   struct svm_parameter *param; 
   int i;
@@ -488,7 +464,7 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "predict", cModel_predict, 1);
 
   /*
-  Not covered for various reasons:
+  Not covered, for various reasons:
     TODO - void svm_get_labels(const struct svm_model *model, int *label); 
     SVR? - double svm_get_svr_probability(const struct svm_model *model);
     SVR? - double svm_predict_probability(const struct svm_model *model, const struct svm_node *x, double* prob_estimates);
@@ -511,4 +487,3 @@ void Init_libsvm_ext() {
   rb_define_const(mSvmType, "EPSILON_SVR", INT2NUM(EPSILON_SVR));
   rb_define_const(mSvmType, "NU_SVR", INT2NUM(NU_SVR));
 }
-
