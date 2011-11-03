@@ -1,0 +1,4 @@
+tmp/
+*.bundle
+*.so
+*.dylib

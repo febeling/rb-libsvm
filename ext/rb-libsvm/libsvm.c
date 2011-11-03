@@ -334,7 +334,7 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   }
   model = svm_train(prob,param);
 
-  return Data_Wrap_Struct(cModel, 0, svm_destroy_model, model);
+  return Data_Wrap_Struct(cModel, 0, svm_free_and_destroy_model, model);
 }
 
 static VALUE cModel_predict(VALUE obj,VALUE example) {
@@ -385,7 +385,7 @@ static VALUE cModel_class_load(VALUE cls, VALUE filename)
   char *path;
   path = StringValueCStr(filename);
   model = svm_load_model(path);
-  return Data_Wrap_Struct(cModel, 0, svm_destroy_model, model);
+  return Data_Wrap_Struct(cModel, 0, svm_free_and_destroy_model, model);
 }
 
 static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE parameter, VALUE num_fold)
