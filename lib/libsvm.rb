@@ -16,33 +16,25 @@ module Libsvm
     class << self
 
       def features(*vargs)
-        ary = nil
-        if vargs.size == 1
-          if vargs.first.respond_to?(:flatten)
-            ary = vargs.first
-          elsif vargs.first.respond_to?(:each_pair)
-            nodes = []
-            vargs.first.to_hash.each_pair do |index, value|
-              node = Node.new
-              node.index = index
-              node.value = value
-              nodes << node
-            end
-            return nodes
-          else 
-            raise(ArgumentError.new("Argument has to be Hash, Array or Float varargs."))
-          end
-        else
-          ary = vargs
-        end
-        index = 0 
-        ary.map do |value|
-          node = Node.new
-          node.index = index
-          node.value = value
-          index += 1
-          node
-        end
+        array_of_nodes = []
+				if vargs.size == 1
+					if vargs.first.class == Array
+						vargs.first.each_with_index do |value, index|
+							array_of_nodes << Node.new(index.to_i, value.to_f)
+						end
+					elsif vargs.first.class == Hash
+						vargs.first.each do |index, value|
+							array_of_nodes << Node.new(index.to_i, value.to_f)
+						end
+					else
+						raise(ArgumentError.new("Node features need to be a Hash, Array or Floats"))
+					end
+				else
+					vargs.each_with_index do |value, index|
+						array_of_nodes << Node.new(index.to_i, value.to_f)
+					end
+				end
+				array_of_nodes
       end
 
       def [](index, value)
