@@ -576,7 +576,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			reconstruct_gradient();
 			// reset active set size and check
 			active_size = l;
-			info("*");
+			// info("*");
 			if(select_working_set(i,j)!=0)
 				break;
 			else
@@ -929,7 +929,7 @@ void Solver::do_shrinking()
 		unshrink = true;
 		reconstruct_gradient();
 		active_size = l;
-		info("*");
+		// info("*");
 	}
 
 	for(i=0;i<active_size;i++)
@@ -1498,7 +1498,7 @@ static void solve_nu_svc(
 		alpha, 1.0, 1.0, param->eps, si,  param->shrinking);
 	double r = si->r;
 
-	info("C = %f\n",1/r);
+	// info("C = %f\n",1/r);
 
 	for(i=0;i<l;i++)
 		alpha[i] *= y[i]/r;
