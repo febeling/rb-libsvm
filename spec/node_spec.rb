@@ -1,5 +1,4 @@
-require "#{File.dirname(__FILE__)}/test_helper"
-require "libsvm"
+require "spec_helper"
 
 include Libsvm
 
@@ -9,19 +8,19 @@ describe "construction of a Node" do
     n.index = 11
     n.value = 0.11
     n.index.should == 11
-    n.value.should be_close(0.11, 0.0001)
+    n.value.should be_within(0.0001).of(0.11)
   end
 
   it "using the :[] method" do
     n = Node[12, 0.12]
     n.index.should == 12
-    n.value.should be_close(0.12, 0.00001)
+		n.value.should be_within(0.00001).of(0.12)
   end
 
   it "using the constructor parameters" do
     n = Node.new(14, 0.14)
     n.index.should == 14
-    n.value.should be_close(0.14, 0.0001)
+		n.value.should be_within(0.0001).of(0.14)
   end
 end
 
@@ -38,12 +37,12 @@ describe "A Node" do
     @node.index = 99
     @node.index.should == 99
     @node.value = 3.141
-    @node.value.should be_close(3.141,0.00001)
+    @node.value.should be_within(0.00001).of(3.141)
   end
 
   it "has inited properties" do
     @node.index.should == 0
-    @node.value.should be_close(0, 0.00001)
+    @node.value.should be_within(0.00001).of(0)
   end
 
   it "class can create nodes from an array" do
