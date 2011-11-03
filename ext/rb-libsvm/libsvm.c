@@ -97,10 +97,10 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
 {
   struct svm_node **x;
   struct svm_node *node_struct;
-  VALUE nodes_ary, node, num;
+  VALUE nodes_ary, node;
   int nodes_ary_len, i;
 
-  num = rx_ary_size(examples_ary);
+	int num = rx_ary_size(examples_ary);
 
   x = (struct svm_node **)calloc(num,sizeof(struct svm_node *));
   if(x == 0) {
@@ -130,11 +130,11 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
 {
   struct svm_problem *prob;
   struct svm_node *node_struct;
-  VALUE num;
+  /* VALUE num;*/
   int i, nodes_ary_len;
   VALUE label, node, nodes_ary;
 
-  num = rx_ary_size(labels_ary);
+  int num = rx_ary_size(labels_ary);
 
   if(num != rx_ary_size(examples_ary)) {
     rb_raise(rb_eArgError, "Number of labels (%i) does not match number of features (%i).", num, rx_ary_size(examples_ary));
