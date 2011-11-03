@@ -4,6 +4,7 @@ require 'rspec/core/rake_task'
 
 Rake::ExtensionTask.new('rb-libsvm') do |ext|
   ext.lib_dir = File.join('lib', 'rb-libsvm')
+  ext.name = 'libsvm'
 end
 
 RSpec::Core::RakeTask.new('spec')

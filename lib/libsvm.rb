@@ -1,4 +1,5 @@
-# require 'rb-libsvm/libsvm_ext'
+require 'rb-libsvm/version'
+require 'rb-libsvm/libsvm'
 
 module Libsvm
 
