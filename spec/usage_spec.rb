@@ -1,6 +1,4 @@
-require "#{File.dirname(__FILE__)}/test_helper"
-require "libsvm"
-
+require 'spec_helper'
 include Libsvm
 
 describe "Basic usage" do

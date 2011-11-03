@@ -1,5 +1,4 @@
-require "#{File.dirname(__FILE__)}/test_helper"
-require "libsvm"
+require 'spec_helper'
 require "yaml"
 
 include Libsvm
