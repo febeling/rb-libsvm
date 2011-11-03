@@ -20,8 +20,7 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   s.add_development_dependency "rake-compiler"
-  s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.add_development_dependency "rspec", "2.7.0"
 
   s.extensions << 'ext/libsvmr/extconf.rb'
 end

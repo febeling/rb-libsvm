@@ -25,4 +25,4 @@ PLATFORMS
 DEPENDENCIES
   rake-compiler
   rb-libsvm!
-  rspec
+  rspec (= 2.7.0)
