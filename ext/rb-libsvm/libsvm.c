@@ -418,7 +418,7 @@ static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE param
   return target;
 }
 
-void Init_libsvm_ext() {
+void Init_libsvm() {
   mLibsvm = rb_define_module("Libsvm");
 
   /* Libsvm::Problem */
