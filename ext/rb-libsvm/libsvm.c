@@ -144,7 +144,7 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
   
   if(prob->l > 0) {
     free(prob->y);
-    for(i = 0; i < num+1; ++i) {
+    for(i = 0; i < num; ++i) {
       free(*(prob->x+i));
     }
     free(prob->x);
