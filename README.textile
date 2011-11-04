@@ -13,13 +13,18 @@ independently and from scratch.
 
 h2. Dependencies
 
-rb-libsvm needs a Ruby installation including C header file and the
-LIBSVM library itself.
+None.  Libsvm is bundled with the project.  Just clone and go!
+
+Currently using libsvm version 3.1
 
 h2. Author, License
 
 Written by C. Florian Ebeling. This software can be freely used under
 the terms of the MIT license, see file MIT-LICENSE.
+
+h2. Contributors
+
+Rimas Silkaitis
 
 h3. Notes
 
@@ -28,3 +33,5 @@ fn1. http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 fn2. http://books.google.com/books?id=fEsZ3Ey-Hq4C
 
 fn3. http://rubysvm.cilibrar.com/
+
+

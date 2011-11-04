@@ -5,10 +5,10 @@ require 'rb-libsvm/version'
 Gem::Specification.new do |s|
   s.name        = "rb-libsvm"
   s.version     = Libsvm::VERSION
-  s.authors     = ["Rimas Silkaitis"]
+  s.authors     = ["C. Florian Ebeling", "Rimas Silkaitis"]
   s.email       = ["neovintage@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{libsvm and ruby - yeah thats right}
+  s.homepage    = "https://github.com/febeling/rb-libsvm"
+  s.summary     = %q{Ruby language bindings for LIBSVM}
   s.description = %q{libsvm and ruby without using swig}
 
   s.rubyforge_project = "rb-libsvm"
