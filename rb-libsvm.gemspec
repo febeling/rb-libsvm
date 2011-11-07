@@ -22,6 +22,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake-compiler"
   s.add_development_dependency "rspec", "2.7.0"
 
-  s.extensions << 'ext/libsvmr/extconf.rb'
+  s.extensions << 'ext/rb-libsvm/extconf.rb'
 end
 
