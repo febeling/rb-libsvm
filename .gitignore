@@ -4,3 +4,6 @@ tmp/
 *.dylib
 *.model
 pkg/
+Gemfile*
+.rvmrc
+tags
