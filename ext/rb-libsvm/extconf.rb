@@ -43,4 +43,4 @@ dir_config('rb-libsvm',HEADER_DIRS,LIB_DIRS)
 
 # Don't think I need to search the dirs for the header file
 
-create_makefile('libsvm/libsvm')
+create_makefile('rb-libsvm/libsvm')
