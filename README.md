@@ -1,4 +1,6 @@
-h1. rb-libsvm -- Ruby language bindings for LIBSVM "!https://secure.travis-ci.org/febeling/rb-libsvm.png!":http://travis-ci.org/febeling/rb-libsvm
+# rb-libsvm -- Ruby language bindings for LIBSVM
+
+Spec Status: "!https://secure.travis-ci.org/febeling/rb-libsvm.png!":http://travis-ci.org/febeling/rb-libsvm
 
 This is a module which provides a Ruby API to the LIBSVM [1] library.
 SVM is a machine learning and classification algorithm, and LIBSVM is
@@ -11,22 +13,50 @@ Note: There exists another Ruby binding for LIBSVM, named Ruby SVM,
 libsvm documentation.) This package is not related but written
 independently and from scratch.
 
-h2. Dependencies
+## Dependencies
 
-None.  Libsvm is bundled with the project.  Just clone and go!
+None.  Libsvm is bundled with the project.  Just install and go!
 
 Currently using libsvm version 3.1
 
-h2. Author, License
+## Installation
+
+    gem install rb-libsvm
+
+## Usage
+
+    require 'libsvm'
+
+    # This library is namespaced.
+    problem = Libsvm::Problem.new
+    parameter = Libsvm::SvmParameter.new
+
+    parameter.cache_size = 1 # in megabytes
+
+    parameter.eps = 0.001
+    parameter.c = 10
+
+    examples = [ [1,0,1], [-1,0,-1] ].map {|ary| Node.features(ary) }
+    labels = [1, -1]
+
+    problem.set_examples(labels, examples)
+
+    model = Model.train(problem, parameter)
+
+    pred = model.predict(Node.features(1, 1, 1))
+    puts "Example [1, 1, 1] - Predicted #{pred}"
+
+
+## Author, License
 
 Written by C. Florian Ebeling. This software can be freely used under
 the terms of the MIT license, see file MIT-LICENSE.
 
-h2. Contributors
+## Contributors
 
 Rimas Silkaitis
 
-h3. Notes
+### Notes
 
 fn1. http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
