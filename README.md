@@ -36,12 +36,12 @@ Currently using libsvm version 3.1
     parameter.eps = 0.001
     parameter.c = 10
 
-    examples = [ [1,0,1], [-1,0,-1] ].map {|ary| Node.features(ary) }
+    examples = [ [1,0,1], [-1,0,-1] ].map {|ary| Libsvm::Node.features(ary) }
     labels = [1, -1]
 
     problem.set_examples(labels, examples)
 
-    model = Model.train(problem, parameter)
+    model = Libsvm::Model.train(problem, parameter)
 
     pred = model.predict(Node.features(1, 1, 1))
     puts "Example [1, 1, 1] - Predicted #{pred}"
