@@ -1,6 +1,6 @@
 # rb-libsvm -- Ruby language bindings for LIBSVM
 
-Spec Status: "!https://secure.travis-ci.org/febeling/rb-libsvm.png!":http://travis-ci.org/febeling/rb-libsvm
+Spec Status: [![Build Status](https://secure.travis-ci.org/febeling/rb-libsvm.png)](http://travis-ci.org/febeling/rb-libsvm)
 
 This is a module which provides a Ruby API to the LIBSVM [1] library.
 SVM is a machine learning and classification algorithm, and LIBSVM is
