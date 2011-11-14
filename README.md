@@ -56,12 +56,19 @@ the terms of the MIT license, see file MIT-LICENSE.
 
 Rimas Silkaitis
 
+### Posts about SVMs and Ruby
+
+[http://neovintage.blogspot.com/2011/11/text-classification-using-support.html](http://neovintage.blogspot.com/2011/11/text-classification-using-support.html)
+
+[http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/](http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/)
+
+
 ### Notes
 
-fn1. http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+[http://www.csie.ntu.edu.tw/~cjlin/libsvm/](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
 
-fn2. http://books.google.com/books?id=fEsZ3Ey-Hq4C
+[http://books.google.com/books?id=fEsZ3Ey-Hq4C](http://books.google.com/books?id=fEsZ3Ey-Hq4C)
 
-fn3. http://rubysvm.cilibrar.com/
+[http://rubysvm.cilibrar.com/](http://rubysvm.cilibrar.com/)
 
 
