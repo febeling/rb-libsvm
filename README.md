@@ -43,7 +43,7 @@ Currently using libsvm version 3.1
 
     model = Libsvm::Model.train(problem, parameter)
 
-    pred = model.predict(Node.features(1, 1, 1))
+    pred = model.predict(Libsvm::Node.features(1, 1, 1))
     puts "Example [1, 1, 1] - Predicted #{pred}"
 
 
