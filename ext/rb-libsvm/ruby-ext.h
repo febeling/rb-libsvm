@@ -21,13 +21,13 @@
   rx_def_accessor0(CLASS,STRUCT,MEMBER_TYPE,ATTR,RNAME,)
 
 #define rx_def_accessor0(CLASS,STRUCT,MEMBER_TYPE,ATTR,RNAME,DEREF)  \
-  static VALUE CLASS ## _ ## RNAME(VALUE obj) {			     \
+  VALUE CLASS ## _ ## RNAME(VALUE obj) {			     \
     STRUCT *struct_var;						     \
     Data_Get_Struct(obj, STRUCT, struct_var);			     \
     return rx_from_ ## MEMBER_TYPE(DEREF struct_var->ATTR);	     \
   }								     \
 								     \
-  static VALUE CLASS ## _ ## RNAME ## _set(VALUE obj,VALUE val) {    \
+  VALUE CLASS ## _ ## RNAME ## _set(VALUE obj,VALUE val) {    \
     STRUCT *struct_var;						     \
     Data_Get_Struct(obj, STRUCT, struct_var);			     \
     DEREF struct_var->ATTR = rx_to_ ## MEMBER_TYPE(val);	     \
