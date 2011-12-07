@@ -15,6 +15,10 @@ VALUE mSvmType;
 
 const struct svm_node TERMINATOR = (struct svm_node) { -1, 0.0 };
 
+static void model_free(struct svm_model *model) {
+  svm_free_and_destroy_model(&model);
+}
+
 /* Libsvm::Node */
 static struct svm_node *node_new() {
   struct svm_node *n;
@@ -334,7 +338,7 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   }
   model = svm_train(prob,param);
 
-  return Data_Wrap_Struct(cModel, 0, svm_free_and_destroy_model, model);
+  return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
 static VALUE cModel_predict(VALUE obj,VALUE example) {
@@ -385,7 +389,7 @@ static VALUE cModel_class_load(VALUE cls, VALUE filename)
   char *path;
   path = StringValueCStr(filename);
   model = svm_load_model(path);
-  return Data_Wrap_Struct(cModel, 0, svm_free_and_destroy_model, model);
+  return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
 static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE parameter, VALUE num_fold)
