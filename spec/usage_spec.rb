@@ -11,7 +11,6 @@ describe "Basic usage" do
 		@parameter.eps = 0.001 
 
 		@parameter.c = 10
-		@parameter.kernel_type = KernelType::RBF
 	end
 
 	it "has a nice API" do
@@ -34,5 +33,15 @@ describe "Basic usage" do
 
 		pred = model.predict(Node.features(-1, 55, -1))
 		pred.should == -1.0
+	end
+
+	it "kernel parameter use" do
+		@parameter.kernel_type = SvmParameter::KernelType::RBF
+		examples = [[1, 2, 3], [-2, -2, -2]].map {|ary| Node.features(ary) }
+		@problem.set_examples([1, 2], examples)
+
+		model = Model.train(@problem, @parameter)
+
+		model.predict(Node.features(1, 2, 3)).should == 2
 	end
 end
