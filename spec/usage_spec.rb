@@ -11,6 +11,7 @@ describe "Basic usage" do
 		@parameter.eps = 0.001 
 
 		@parameter.c = 10
+		@parameter.kernel_type = KernelType::RBF
 	end
 
 	it "has a nice API" do
