@@ -54,7 +54,9 @@ the terms of the MIT license, see file MIT-LICENSE.
 
 ## Contributors
 
-Rimas Silkaitis
+[Rimas Silkaitis](https://github.com/neovintage)
+
+[Aleksander Pohl](https://github.com/apohllo)
 
 ### Posts about SVMs and Ruby
 
