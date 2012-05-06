@@ -52,6 +52,9 @@ Currently using libsvm version 3.1
 Written by C. Florian Ebeling. This software can be freely used under
 the terms of the MIT license, see file MIT-LICENSE.
 
+This package includes the source of LIBSVM, which is free to use under
+the license in the file LIBSVM-LICENSE.
+
 ## Contributors
 
 [Rimas Silkaitis](https://github.com/neovintage)
