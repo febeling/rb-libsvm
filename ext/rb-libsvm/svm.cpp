@@ -5,6 +5,8 @@
 #include <float.h>
 #include <string.h>
 #include <stdarg.h>
+#include <limits.h>
+#include <locale.h>
 #include "svm.h"
 int libsvm_version = LIBSVM_VERSION;
 typedef float Qfloat;
@@ -474,7 +476,7 @@ void Solver::reconstruct_gradient()
 			nr_free++;
 
 	if(2*nr_free < active_size)
-		info("\nWarning: using -h 0 may be faster\n");
+		info("\nWARNING: using -h 0 may be faster\n");
 
 	if (nr_free*l > 2*active_size*(l-active_size))
 	{
@@ -556,9 +558,10 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// optimization step
 
 	int iter = 0;
+	int max_iter = max(10000000, l>INT_MAX/100 ? INT_MAX : 100*l);
 	int counter = min(l,1000)+1;
-
-	while(1)
+	
+	while(iter < max_iter)
 	{
 		// show progress and do shrinking
 
@@ -576,7 +579,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			reconstruct_gradient();
 			// reset active set size and check
 			active_size = l;
-			// info("*");
+			info("*");
 			if(select_working_set(i,j)!=0)
 				break;
 			else
@@ -725,6 +728,18 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		}
 	}
 
+	if(iter >= max_iter)
+	{
+		if(active_size < l)
+		{
+			// reconstruct the whole gradient to calculate objective value
+			reconstruct_gradient();
+			active_size = l;
+			info("*");
+		}
+		info("\nWARNING: reaching max number of iterations");
+	}
+
 	// calculate rho
 
 	si->rho = calculate_rho();
@@ -756,7 +771,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	si->upper_bound_p = Cp;
 	si->upper_bound_n = Cn;
 
-	// info("\noptimization finished, #iter = %d\n",iter);
+	info("\noptimization finished, #iter = %d\n",iter);
 
 	delete[] p;
 	delete[] y;
@@ -929,7 +944,7 @@ void Solver::do_shrinking()
 		unshrink = true;
 		reconstruct_gradient();
 		active_size = l;
-		// info("*");
+		info("*");
 	}
 
 	for(i=0;i<active_size;i++)
@@ -1448,7 +1463,7 @@ static void solve_c_svc(
 		sum_alpha += alpha[i];
 
 	if (Cp==Cn)
-		// info("nu = %f\n", sum_alpha/(Cp*prob->l));
+		info("nu = %f\n", sum_alpha/(Cp*prob->l));
 
 	for(i=0;i<l;i++)
 		alpha[i] *= y[i];
@@ -1498,7 +1513,7 @@ static void solve_nu_svc(
 		alpha, 1.0, 1.0, param->eps, si,  param->shrinking);
 	double r = si->r;
 
-	// info("C = %f\n",1/r);
+	info("C = %f\n",1/r);
 
 	for(i=0;i<l;i++)
 		alpha[i] *= y[i]/r;
@@ -1575,7 +1590,7 @@ static void solve_epsilon_svr(
 		alpha[i] = alpha2[i] - alpha2[i+l];
 		sum_alpha += fabs(alpha[i]);
 	}
-	// info("nu = %f\n",sum_alpha/(param->C*l));
+	info("nu = %f\n",sum_alpha/(param->C*l));
 
 	delete[] alpha2;
 	delete[] linear_term;
@@ -1610,7 +1625,7 @@ static void solve_nu_svr(
 	s.Solve(2*l, SVR_Q(*prob,*param), linear_term, y,
 		alpha2, C, C, param->eps, si, param->shrinking);
 
-	// info("epsilon = %f\n",-si->r);
+	info("epsilon = %f\n",-si->r);
 
 	for(i=0;i<l;i++)
 		alpha[i] = alpha2[i] - alpha2[i+l];
@@ -1654,7 +1669,7 @@ static decision_function svm_train_one(
 			break;
 	}
 
-	// info("obj = %f, rho = %f\n",si.obj,si.rho);
+	info("obj = %f, rho = %f\n",si.obj,si.rho);
 
 	// output SVs
 
@@ -1678,7 +1693,7 @@ static decision_function svm_train_one(
 		}
 	}
 
-	// info("nSV = %d, nBSV = %d\n",nSV,nBSV);
+	info("nSV = %d, nBSV = %d\n",nSV,nBSV);
 
 	decision_function f;
 	f.alpha = alpha;
@@ -2114,7 +2129,10 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		int *perm = Malloc(int,l);
 
 		// group training data of the same class
-		svm_group_classes(prob,&nr_class,&label,&start,&count,perm);		
+		svm_group_classes(prob,&nr_class,&label,&start,&count,perm);
+		if(nr_class == 1) 
+			info("WARNING: training data in only one class. See README for details.\n");
+		
 		svm_node **x = Malloc(svm_node *,l);
 		int i;
 		for(i=0;i<l;i++)
@@ -2132,7 +2150,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 				if(param->weight_label[i] == label[j])
 					break;
 			if(j == nr_class)
-				fprintf(stderr,"warning: class label %d specified in weight is not found\n", param->weight_label[i]);
+				fprintf(stderr,"WARNING: class label %d specified in weight is not found\n", param->weight_label[i]);
 			else
 				weighted_C[j] *= param->weight[i];
 		}
@@ -2232,7 +2250,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 			nz_count[i] = nSV;
 		}
 		
-		// info("Total nSV = %d\n",total_sv);
+		info("Total nSV = %d\n",total_sv);
 
 		model->l = total_sv;
 		model->SV = Malloc(svm_node *,total_sv);
@@ -2440,13 +2458,14 @@ double svm_get_svr_probability(const svm_model *model)
 
 double svm_predict_values(const svm_model *model, const svm_node *x, double* dec_values)
 {
+	int i;
 	if(model->param.svm_type == ONE_CLASS ||
 	   model->param.svm_type == EPSILON_SVR ||
 	   model->param.svm_type == NU_SVR)
 	{
 		double *sv_coef = model->sv_coef[0];
 		double sum = 0;
-		for(int i=0;i<model->l;i++)
+		for(i=0;i<model->l;i++)
 			sum += sv_coef[i] * Kernel::k_function(x,model->SV[i],model->param);
 		sum -= model->rho[0];
 		*dec_values = sum;
@@ -2458,7 +2477,6 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 	}
 	else
 	{
-		int i;
 		int nr_class = model->nr_class;
 		int l = model->l;
 		
@@ -2583,6 +2601,9 @@ int svm_save_model(const char *model_file_name, const svm_model *model)
 	FILE *fp = fopen(model_file_name,"w");
 	if(fp==NULL) return -1;
 
+	char *old_locale = strdup(setlocale(LC_ALL, NULL));
+	setlocale(LC_ALL, "C");
+
 	const svm_parameter& param = model->param;
 
 	fprintf(fp,"svm_type %s\n", svm_type_table[param.svm_type]);
@@ -2661,6 +2682,10 @@ int svm_save_model(const char *model_file_name, const svm_model *model)
 			}
 		fprintf(fp, "\n");
 	}
+
+	setlocale(LC_ALL, old_locale);
+	free(old_locale);
+
 	if (ferror(fp) != 0 || fclose(fp) != 0) return -1;
 	else return 0;
 }
@@ -2690,7 +2715,10 @@ svm_model *svm_load_model(const char *model_file_name)
 {
 	FILE *fp = fopen(model_file_name,"rb");
 	if(fp==NULL) return NULL;
-	
+
+	char *old_locale = strdup(setlocale(LC_ALL, NULL));
+	setlocale(LC_ALL, "C");
+
 	// read parameters
 
 	svm_model *model = Malloc(svm_model,1);
@@ -2721,6 +2749,9 @@ svm_model *svm_load_model(const char *model_file_name)
 			if(svm_type_table[i] == NULL)
 			{
 				fprintf(stderr,"unknown svm type.\n");
+				
+				setlocale(LC_ALL, old_locale);
+				free(old_locale);
 				free(model->rho);
 				free(model->label);
 				free(model->nSV);
@@ -2743,6 +2774,9 @@ svm_model *svm_load_model(const char *model_file_name)
 			if(kernel_type_table[i] == NULL)
 			{
 				fprintf(stderr,"unknown kernel function.\n");
+				
+				setlocale(LC_ALL, old_locale);
+				free(old_locale);
 				free(model->rho);
 				free(model->label);
 				free(model->nSV);
@@ -2807,6 +2841,9 @@ svm_model *svm_load_model(const char *model_file_name)
 		else
 		{
 			fprintf(stderr,"unknown text in model file: [%s]\n",cmd);
+			
+			setlocale(LC_ALL, old_locale);
+			free(old_locale);
 			free(model->rho);
 			free(model->label);
 			free(model->nSV);
@@ -2879,6 +2916,9 @@ svm_model *svm_load_model(const char *model_file_name)
 	}
 	free(line);
 
+	setlocale(LC_ALL, old_locale);
+	free(old_locale);
+
 	if (ferror(fp) != 0 || fclose(fp) != 0)
 		return NULL;
 
@@ -2888,13 +2928,13 @@ svm_model *svm_load_model(const char *model_file_name)
 
 void svm_free_model_content(svm_model* model_ptr)
 {
-  if(model_ptr->free_sv && model_ptr->l > 0 && model_ptr->SV != NULL)
-    free((void *)(model_ptr->SV[0]));
-  if(model_ptr->sv_coef)
-  {
-    for(int i=0;i<model_ptr->nr_class-1;i++)
-      free(model_ptr->sv_coef[i]);
-  }
+	if(model_ptr->free_sv && model_ptr->l > 0 && model_ptr->SV != NULL)
+		free((void *)(model_ptr->SV[0]));
+	if(model_ptr->sv_coef)
+	{
+		for(int i=0;i<model_ptr->nr_class-1;i++)
+			free(model_ptr->sv_coef[i]);
+	}
 
 	free(model_ptr->SV);
 	model_ptr->SV = NULL;
@@ -2920,12 +2960,12 @@ void svm_free_model_content(svm_model* model_ptr)
 
 void svm_free_and_destroy_model(svm_model** model_ptr_ptr)
 {
-  if(model_ptr_ptr != NULL && *model_ptr_ptr != NULL)
-  {
-    svm_free_model_content(*model_ptr_ptr);
+	if(model_ptr_ptr != NULL && *model_ptr_ptr != NULL)
+	{
+		svm_free_model_content(*model_ptr_ptr);
 		free(*model_ptr_ptr);
-    *model_ptr_ptr = NULL;
-  }
+		*model_ptr_ptr = NULL;
+	}
 }
 
 void svm_destroy_param(svm_parameter* param)
