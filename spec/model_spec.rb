@@ -49,7 +49,7 @@ describe "A saved model" do
   include ModelSpecHelper
 
   before(:each) do
-    @filename = "svm_model.model"
+    @filename = "tmp/svm_model.model"
     model = Model.train(create_problem, create_parameter)
     model.save(@filename)
   end
@@ -71,12 +71,13 @@ describe "An Libsvm model" do
     @problem = create_problem
     @parameter = create_parameter
     @model = Model.train(@problem, @parameter)
+    @file_path = "tmp/svm_model.model"
+    File.delete(@file_path) if File.exists?(@file_path)
   end
 
   it "can be saved to a file" do
-    file_path = "svm_model.model"
-    @model.save(file_path)
-    File.exist?(file_path).should be_true
+    @model.save(@file_path)
+    File.exist?(@file_path).should be_true
   end
 
   it "can be asked for it's svm_type" do
@@ -92,4 +93,3 @@ describe "An Libsvm model" do
     prediction.should_not be_nil
   end
 end
-
