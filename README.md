@@ -17,7 +17,7 @@ independently and from scratch.
 
 None.  Libsvm is bundled with the project.  Just install and go!
 
-Currently using libsvm version 3.1
+Currently using libsvm version 3.12
 
 ## Installation
 
@@ -73,7 +73,3 @@ the license in the file LIBSVM-LICENSE.
 [http://www.csie.ntu.edu.tw/~cjlin/libsvm/](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
 
 [http://books.google.com/books?id=fEsZ3Ey-Hq4C](http://books.google.com/books?id=fEsZ3Ey-Hq4C)
-
-[http://rubysvm.cilibrar.com/](http://rubysvm.cilibrar.com/)
-
-
