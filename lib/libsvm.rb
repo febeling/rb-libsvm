@@ -1,5 +1,5 @@
-require 'rb-libsvm/version'
-require 'rb-libsvm/libsvm'
+require 'libsvm/version'
+require 'libsvm/libsvm_ext'
 require 'libsvm/node'
 
 module Libsvm
@@ -11,7 +11,6 @@ module Libsvm
     end
   end
 end
-
 
 class Hash
   include Libsvm::CoreExtensions::Collection

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require 'rb-libsvm/version'
+require 'libsvm/version'
 
 Gem::Specification.new do |s|
   s.name        = "rb-libsvm"
@@ -22,6 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake-compiler')
   s.add_development_dependency('rspec', '>= 2.7.0')
 
-  s.extensions << 'ext/rb-libsvm/extconf.rb'
+  s.extensions << 'ext/libsvm/extconf.rb'
 end
-
