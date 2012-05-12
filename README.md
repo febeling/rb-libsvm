@@ -2,22 +2,22 @@
 
 Spec Status: [![Build Status](https://secure.travis-ci.org/febeling/rb-libsvm.png)](http://travis-ci.org/febeling/rb-libsvm)
 
-This is a module which provides a Ruby API to the LIBSVM [1] library.
-SVM is a machine learning and classification algorithm, and LIBSVM is
-a popular free implementation of it, written by Chih-Chung Chang and
+This package provides a Ruby bindings to the LIBSVM [1] library.  SVM
+is a machine learning and classification algorithm, and LIBSVM is a
+popular free implementation of it, written by Chih-Chung Chang and
 Chih-Jen Lin, of National Taiwan University, Taipei. See "Programming
 Collective Intelligence," [2] among others, for a usage example.
 
-Note: There exists another Ruby binding for LIBSVM, named Ruby SVM,
-[3] written by Rudi Cilibrasi. (That's the one mentioned in the
-libsvm documentation.) This package is not related but written
-independently and from scratch.
+Note: There exist two other Ruby bindings for LIBSVM. One is named
+Ruby SVM, written by Rudi Cilibrasi. It is hard to find now. The
+other, more actively developed one is libsvm-ruby-swig by Tom Zeng
+[3], which is built using SWIG.
 
 ## Dependencies
 
 None.  Libsvm is bundled with the project.  Just install and go!
 
-Currently using libsvm version 3.12
+Currently includes libsvm version 3.12.
 
 ## Installation
 
@@ -25,6 +25,7 @@ Currently using libsvm version 3.12
 
 ## Usage
 
+```ruby
     require 'libsvm'
 
     # This library is namespaced.
@@ -45,7 +46,7 @@ Currently using libsvm version 3.12
 
     pred = model.predict(Libsvm::Node.features(1, 1, 1))
     puts "Example [1, 1, 1] - Predicted #{pred}"
-
+```
 
 ## Author, License
 
@@ -68,8 +69,9 @@ the license in the file LIBSVM-LICENSE.
 [http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/](http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/)
 
 
-### Notes
 
-[http://www.csie.ntu.edu.tw/~cjlin/libsvm/](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
+[1]: [http://www.csie.ntu.edu.tw/~cjlin/libsvm/](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
 
-[http://books.google.com/books?id=fEsZ3Ey-Hq4C](http://books.google.com/books?id=fEsZ3Ey-Hq4C)
+[2]: [http://books.google.com/books?id=fEsZ3Ey-Hq4C](http://books.google.com/books?id=fEsZ3Ey-Hq4C)
+
+[3]: http://github.com/tomz/libsvm-ruby-swig/tree/master
