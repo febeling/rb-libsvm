@@ -6,6 +6,6 @@ $LDFLAGS << " -lstdc++ "
 HEADER_DIRS = []
 LIB_DIRS = []
 
-dir_config('rb-libsvm',HEADER_DIRS,LIB_DIRS)
+dir_config('libsvm', HEADER_DIRS, LIB_DIRS)
 
-create_makefile('rb-libsvm/libsvm')
+create_makefile('libsvm/libsvm_ext')
