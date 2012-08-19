@@ -2,22 +2,29 @@
 
 Spec Status: [![Build Status](https://secure.travis-ci.org/febeling/rb-libsvm.png)](http://travis-ci.org/febeling/rb-libsvm)
 
-This package provides a Ruby bindings to the LIBSVM [1] library.  SVM
+This package provides a Ruby bindings to the [LIBSVM][] library.  SVM
 is a machine learning and classification algorithm, and LIBSVM is a
 popular free implementation of it, written by Chih-Chung Chang and
-Chih-Jen Lin, of National Taiwan University, Taipei. See "Programming
-Collective Intelligence," [2] among others, for a usage example.
+Chih-Jen Lin, of National Taiwan University, Taipei. See the book ["Programming
+Collective Intelligence,"](http://books.google.com/books?id=fEsZ3Ey-Hq4C) among others, for a usage example.
 
 Note: There exist two other Ruby bindings for LIBSVM. One is named
-Ruby SVM, written by Rudi Cilibrasi. It is hard to find now. The
-other, more actively developed one is libsvm-ruby-swig by Tom Zeng
-[3], which is built using SWIG.
+"Ruby SVM," and is written by Rudi Cilibrasi. It is hard to find
+nowadays. The other, more actively developed one is
+[libsvm-ruby-swig][svmrubyswig] by Tom Zeng, which is built using
+SWIG.
 
 ## Dependencies
 
-None.  Libsvm is bundled with the project.  Just install and go!
+None.  LIBSVM is bundled with the project.  Just install and go!
 
-Currently includes libsvm version 3.12.
+Currently this package includes libsvm version 3.12.
+
+LIBSVM includes a number of command line tools for preprocessing
+training data and finding parameters. These tools are not included in
+this gem. You should install the original package if you need these.
+It is also helpful to consult the Readme of the LIBSVM package for 
+reference when configuring the training parameters.
 
 ## Installation
 
@@ -48,13 +55,9 @@ pred = model.predict(Libsvm::Node.features(1, 1, 1))
 puts "Example [1, 1, 1] - Predicted #{pred}"
 ```
 
-## Author, License
+## Author
 
-Written by C. Florian Ebeling. This software can be freely used under
-the terms of the MIT license, see file MIT-LICENSE.
-
-This package includes the source of LIBSVM, which is free to use under
-the license in the file LIBSVM-LICENSE.
+Written by C. Florian Ebeling.
 
 ## Contributors
 
@@ -62,16 +65,20 @@ the license in the file LIBSVM-LICENSE.
 
 [Aleksander Pohl](https://github.com/apohllo)
 
-### Posts about SVMs and Ruby
+## License
 
-[http://neovintage.blogspot.com/2011/11/text-classification-using-support.html](http://neovintage.blogspot.com/2011/11/text-classification-using-support.html)
+This software can be freely used under the terms of the MIT license,
+see file MIT-LICENSE.
 
-[http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/](http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/)
+This package includes the source of LIBSVM, which is free to use under
+the license in the file LIBSVM-LICENSE.
 
+### Posts about using SVMs with Ruby
 
+http://neovintage.blogspot.com/2011/11/text-classification-using-support.html
 
-[1]: [http://www.csie.ntu.edu.tw/~cjlin/libsvm/](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
+http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/
 
-[2]: [http://books.google.com/books?id=fEsZ3Ey-Hq4C](http://books.google.com/books?id=fEsZ3Ey-Hq4C)
+[libsvm]:       http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
-[3]: http://github.com/tomz/libsvm-ruby-swig/tree/master
+[svmrubyswig]:  http://github.com/tomz/libsvm-ruby-swig/tree/master
