@@ -9,28 +9,37 @@ Chih-Jen Lin, of National Taiwan University, Taipei. See the book ["Programming
 Collective Intelligence,"](http://books.google.com/books?id=fEsZ3Ey-Hq4C) among others, for a usage example.
 
 Note: There exist two other Ruby bindings for LIBSVM. One is named
-"Ruby SVM," and is written by Rudi Cilibrasi. It is hard to find
-nowadays. The other, more actively developed one is
-[libsvm-ruby-swig][svmrubyswig] by Tom Zeng, which is built using
-SWIG.
+[Ruby SVM,][ruby-svm], written by Rudi Cilibrasi. The other, more
+actively developed one is [libsvm-ruby-swig][svmrubyswig] by Tom Zeng,
+which is built using SWIG.
+
+LIBSVM includes a number of command line tools for preprocessing
+training data and finding parameters. These tools are not included in
+this gem. You should install the original package if you need them.
+
+It is helpful to consult the Readme of the LIBSVM package for
+reference when configuring the training parameters.
+
+Currently this package includes libsvm version 3.13.
 
 ## Dependencies
 
 None.  LIBSVM is bundled with the project.  Just install and go!
 
-Currently this package includes libsvm version 3.13.
-
-LIBSVM includes a number of command line tools for preprocessing
-training data and finding parameters. These tools are not included in
-this gem. You should install the original package if you need these.
-It is also helpful to consult the Readme of the LIBSVM package for 
-reference when configuring the training parameters.
-
 ## Installation
+
+For building this gem from source on OS X (which is the default
+packaing) you will need to have Xcode installed, and from within Xcode
+you need to install the command line tools. Those contain the compiler
+which is necessary for the native code, and similar tools.
+
+To install the gem run this command
 
     gem install rb-libsvm
 
 ## Usage
+
+This is a short example of how to use the gem.
 
 ```ruby
 require 'libsvm'
@@ -54,6 +63,18 @@ model = Libsvm::Model.train(problem, parameter)
 pred = model.predict(Libsvm::Node.features(1, 1, 1))
 puts "Example [1, 1, 1] - Predicted #{pred}"
 ```
+
+If you want to rely on Bundler for loading dependencies in a project,
+(i.e. use `Bundler.require` or use an environment that relies on it,
+like Rails), then you will need to specify rb-libsvm in the Gemfile
+like this:
+
+```ruby
+gem 'rb-libsvm', require: 'libsvm'
+```
+
+This is because the loadable name (`libsvm`) is different from the
+gem's name (`rb-libsvm`).
 
 ## Author
 
@@ -82,3 +103,5 @@ http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/
 [libsvm]:       http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
 [svmrubyswig]:  http://github.com/tomz/libsvm-ruby-swig/tree/master
+
+[ruby-svm]:     http://sourceforge.net/projects/rubysvm/
