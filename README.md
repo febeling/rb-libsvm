@@ -9,7 +9,7 @@ Chih-Jen Lin, of National Taiwan University, Taipei. See the book ["Programming
 Collective Intelligence,"](http://books.google.com/books?id=fEsZ3Ey-Hq4C) among others, for a usage example.
 
 Note: There exist two other Ruby bindings for LIBSVM. One is named
-[Ruby SVM,][ruby-svm], written by Rudi Cilibrasi. The other, more
+[Ruby SVM][ruby-svm], written by Rudi Cilibrasi. The other, more
 actively developed one is [libsvm-ruby-swig][svmrubyswig] by Tom Zeng,
 which is built using SWIG.
 
