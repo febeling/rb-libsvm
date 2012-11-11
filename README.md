@@ -18,7 +18,7 @@ SWIG.
 
 None.  LIBSVM is bundled with the project.  Just install and go!
 
-Currently this package includes libsvm version 3.12.
+Currently this package includes libsvm version 3.13.
 
 LIBSVM includes a number of command line tools for preprocessing
 training data and finding parameters. These tools are not included in
