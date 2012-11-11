@@ -29,7 +29,7 @@ None.  LIBSVM is bundled with the project.  Just install and go!
 ## Installation
 
 For building this gem from source on OS X (which is the default
-packaing) you will need to have Xcode installed, and from within Xcode
+packaging) you will need to have Xcode installed, and from within Xcode
 you need to install the command line tools. Those contain the compiler
 which is necessary for the native code, and similar tools.
 
