@@ -1,12 +1,13 @@
-tmp/
+/tmp
 *.bundle
 *.so
 *.dylib
 *.model
-pkg/
+/pkg
 Gemfile*
 .rvmrc
 tags
 *.swp
 *~
-/.rbx/
+/.rbx
+/vendor
