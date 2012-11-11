@@ -737,7 +737,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			active_size = l;
 			info("*");
 		}
-		info("\nWARNING: reaching max number of iterations");
+		fprintf(stderr,"\nWARNING: reaching max number of iterations\n");
 	}
 
 	// calculate rho
@@ -1006,7 +1006,7 @@ double Solver::calculate_rho()
 //
 // additional constraint: e^T \alpha = constant
 //
-class Solver_NU : public Solver
+class Solver_NU: public Solver
 {
 public:
 	Solver_NU() {}
@@ -2107,12 +2107,14 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 		model->l = nSV;
 		model->SV = Malloc(svm_node *,nSV);
 		model->sv_coef[0] = Malloc(double,nSV);
+		model->sv_indices = Malloc(int,nSV);
 		int j = 0;
 		for(i=0;i<prob->l;i++)
 			if(fabs(f.alpha[i]) > 0)
 			{
 				model->SV[j] = prob->x[i];
 				model->sv_coef[0][j] = f.alpha[i];
+				model->sv_indices[j] = i+1;
 				++j;
 			}		
 
@@ -2254,9 +2256,14 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 
 		model->l = total_sv;
 		model->SV = Malloc(svm_node *,total_sv);
+		model->sv_indices = Malloc(int,total_sv);
 		p = 0;
 		for(i=0;i<l;i++)
-			if(nonzero[i]) model->SV[p++] = x[i];
+			if(nonzero[i])
+			{
+				model->SV[p] = x[i];
+				model->sv_indices[p++] = perm[i] + 1;
+			}
 
 		int *nz_start = Malloc(int,nr_class);
 		nz_start[0] = 0;
@@ -2442,6 +2449,18 @@ void svm_get_labels(const svm_model *model, int* label)
 	if (model->label != NULL)
 		for(int i=0;i<model->nr_class;i++)
 			label[i] = model->label[i];
+}
+
+void svm_get_sv_indices(const svm_model *model, int* indices)
+{
+	if (model->sv_indices != NULL)
+		for(int i=0;i<model->l;i++)
+			indices[i] = model->sv_indices[i];
+}
+
+int svm_get_nr_sv(const svm_model *model)
+{
+	return model->l;
 }
 
 double svm_get_svr_probability(const svm_model *model)
