@@ -17,7 +17,7 @@ LIBSVM includes a number of command line tools for preprocessing
 training data and finding parameters. These tools are not included in
 this gem. You should install the original package if you need them.
 
-It is helpful to consult the Readme of the LIBSVM package for
+It is helpful to consult the [README][] of the LIBSVM package for
 reference when configuring the training parameters.
 
 Currently this package includes libsvm version 3.13.
@@ -105,3 +105,5 @@ http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/
 [svmrubyswig]:  http://github.com/tomz/libsvm-ruby-swig/tree/master
 
 [ruby-svm]:     http://sourceforge.net/projects/rubysvm/
+
+[README]:       https://github.com/febeling/libsvm/blob/master/README
