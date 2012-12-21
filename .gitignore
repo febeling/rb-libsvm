@@ -4,7 +4,7 @@
 *.dylib
 *.model
 /pkg
-Gemfile*
+Gemfile.lock
 .rvmrc
 tags
 *.swp
