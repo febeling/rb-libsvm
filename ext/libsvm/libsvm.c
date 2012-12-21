@@ -22,7 +22,7 @@ static void model_free(struct svm_model *model) {
 /* Libsvm::Node */
 static struct svm_node *node_new() {
   struct svm_node *n;
-  n = (struct svm_node *) calloc(1,sizeof(struct svm_node));
+  n = calloc(1,sizeof(struct svm_node));
   if(n == NULL)
     return NULL;
   return n;
@@ -47,7 +47,7 @@ rx_def_accessor(cNode,struct svm_node,double,value);
 /* Libsvm::Problem */
 static struct svm_problem *problem_new() {
   struct svm_problem *n;
-  n = (struct svm_problem *) calloc(1,sizeof(struct svm_problem));
+  n = calloc(1,sizeof(struct svm_problem));
   if(n == NULL)
     return NULL;
   return n;
@@ -81,7 +81,7 @@ static struct svm_node *example_to_internal(VALUE example_ary)
 
   /* allocate memory for it */
   example_ary_len = rx_ary_size(example_ary);
-  x = (struct svm_node *)calloc(example_ary_len+1,sizeof(struct svm_node));
+  x = calloc(example_ary_len+1,sizeof(struct svm_node));
   if(x == 0) {
     rb_raise(rb_eNoMemError, "on Libsvm::Node allocation" " %s:%i", __FILE__,__LINE__);
   }
@@ -106,7 +106,7 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
 
 	int num = rx_ary_size(examples_ary);
 
-  x = (struct svm_node **)calloc(num,sizeof(struct svm_node *));
+  x = calloc(num,sizeof(struct svm_node *));
   if(x == 0) {
     rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
   }
@@ -154,7 +154,7 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
     free(prob->x);
   }
 
-  prob->y = (double *)calloc(num,sizeof(double));
+  prob->y = calloc(num,sizeof(double));
   if(prob->y == 0) {
     rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
   }
@@ -189,7 +189,7 @@ static VALUE cProblem_examples(VALUE problem) {
   labels_ary = rb_ary_new2(prob->l);
   examples_ary = rb_ary_new2(prob->l);
   
-  features = (struct svm_node *)calloc(prob->l, sizeof(struct svm_node));
+  features = calloc(prob->l, sizeof(struct svm_node));
   if(features == 0) {
     rb_raise(rb_eNoMemError, "on allocating Libsvm::Node" " %s:%i", __FILE__,__LINE__);
   }
@@ -201,7 +201,7 @@ static VALUE cProblem_examples(VALUE problem) {
     node = *(prob->x+i); /* example start pointer */
     example_ary = rb_ary_new();
     while(node->index != -1) {
-      node_copy = (struct svm_node *)malloc(sizeof(struct svm_node));
+      node_copy = malloc(sizeof(struct svm_node));
       if(node_copy == 0) {
 	rb_raise(rb_eNoMemError, "on allocating Libsvm::Node" " %s:%i", __FILE__,__LINE__);
       }
@@ -224,7 +224,7 @@ static VALUE cProblem_examples(VALUE problem) {
 
 static struct svm_parameter *parameter_new() {
   struct svm_parameter *n;
-  n = (struct svm_parameter *) calloc(1,sizeof(struct svm_parameter));
+  n = calloc(1,sizeof(struct svm_parameter));
   if(n == NULL)
     return NULL;
   return n;
@@ -282,8 +282,8 @@ static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
   }
 
   param->nr_weight = rx_hash_size(weight_hash);
-  param->weight = (double *)calloc(param->nr_weight,sizeof(double));
-  param->weight_label = (int *)calloc(param->nr_weight,sizeof(int));
+  param->weight = calloc(param->nr_weight,sizeof(double));
+  param->weight_label = calloc(param->nr_weight,sizeof(int));
 
   keys = rb_funcall(weight_hash, rb_intern("keys"),0);
 
@@ -406,7 +406,7 @@ static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE param
   nr_fold = NUM2INT(num_fold);
 
   target = rb_ary_new2(prob->l);
-  target_ptr = (double *)calloc(prob->l, sizeof(double));
+  target_ptr = calloc(prob->l, sizeof(double));
   if(target_ptr == 0) {
     rb_raise(rb_eNoMemError, "on cross-validation result allocation" " %s:%i", __FILE__,__LINE__);
   }
