@@ -100,9 +100,8 @@ static struct svm_node *example_to_internal(VALUE example_ary)
 static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
 {
   struct svm_node **x;
-  struct svm_node *node_struct;
-  VALUE nodes_ary, node;
-  int nodes_ary_len, i;
+  VALUE nodes_ary;
+  int i;
 
 	int num = rx_ary_size(examples_ary);
 
@@ -133,10 +132,7 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
 static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary) 
 {
   struct svm_problem *prob;
-  struct svm_node *node_struct;
-  /* VALUE num;*/
-  int i, nodes_ary_len;
-  VALUE label, node, nodes_ary;
+  int i;
 
   int num = rx_ary_size(labels_ary);
 
@@ -182,7 +178,7 @@ static VALUE cProblem_examples(VALUE problem) {
   double label;
   struct svm_node *features;
   VALUE labels_ary, examples_ary, example_ary, v_node, result;
-  int i,n;
+  int i;
 
   Data_Get_Struct(problem, struct svm_problem, prob); 
 
@@ -270,8 +266,7 @@ rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
 */
 static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
   struct svm_parameter *param;
-  int i,len,weight_label;
-  double weight;
+  int i;
   VALUE keys,key,val;
 
   Data_Get_Struct(obj,struct svm_parameter,param);
