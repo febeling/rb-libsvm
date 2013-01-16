@@ -21,6 +21,7 @@ module ModelSpecHelper
     parameter.cache_size = 50 # mb
     parameter.eps = 0.01
     parameter.c = 10
+    parameter.probability = 1
     parameter
   end
 
@@ -91,5 +92,11 @@ describe "An Libsvm model" do
   it "can predict" do
     prediction = @model.predict(create_example)
     prediction.should_not be_nil
+  end
+  it "can predict probability" do
+    probabilities = Array.new(@model.classes)
+    prediction = @model.predict_probablility(create_example, probabilities)
+    prediction.should_not be_nil
+    probabilities.each { |e| e.should_not be_nil }
   end
 end

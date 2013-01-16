@@ -348,6 +348,30 @@ static VALUE cModel_predict(VALUE obj,VALUE example) {
   return rb_float_new(class);
 }
 
+static VALUE cModel_predict_probability(VALUE obj,VALUE example,VALUE estimates) {
+  struct svm_node *x;
+  struct svm_model *model;
+  double class;
+  double *c_estimates;
+  int i;
+
+  x = example_to_internal(example);
+  Data_Get_Struct(obj, struct svm_model, model);
+  c_estimates = calloc(model->nr_class, sizeof(double));
+  if(c_estimates == 0) {
+    rb_raise(rb_eNoMemError, "on predict probability estimates allocation" " %s:%i", __FILE__,__LINE__);
+  }
+
+  class = svm_predict_probability(model, x, c_estimates);
+
+  for (i = 0; i < model->nr_class; i++)
+    rb_ary_store(estimates, i, rx_from_double(c_estimates[i]));
+
+  free(c_estimates);
+
+  return rb_float_new(class);
+}
+
 static VALUE cModel_save(VALUE obj, VALUE filename)
 {
   const struct svm_model *model;
@@ -461,12 +485,12 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "svm_type", cModel_svm_type, 0);
   rb_define_method(cModel, "classes", cModel_classes, 0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
+  rb_define_method(cModel, "predict_probablility", cModel_predict_probability, 2);
 
   /*
   Not covered, for various reasons:
     TODO - void svm_get_labels(const struct svm_model *model, int *label); 
     SVR? - double svm_get_svr_probability(const struct svm_model *model);
-    SVR? - double svm_predict_probability(const struct svm_model *model, const struct svm_node *x, double* prob_estimates);
     Model holds reference to this, so when to use it?
            void svm_destroy_param(struct svm_parameter *param);
     SVR? - int svm_check_probability_model(const struct svm_model *model);
