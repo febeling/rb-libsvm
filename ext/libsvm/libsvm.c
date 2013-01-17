@@ -485,7 +485,7 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "svm_type", cModel_svm_type, 0);
   rb_define_method(cModel, "classes", cModel_classes, 0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
-  rb_define_method(cModel, "predict_probablility", cModel_predict_probability, 2);
+  rb_define_method(cModel, "predict_probability", cModel_predict_probability, 2);
 
   /*
   Not covered, for various reasons:
