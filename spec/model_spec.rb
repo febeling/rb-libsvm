@@ -95,7 +95,7 @@ describe "An Libsvm model" do
   end
   it "can predict probability" do
     probabilities = Array.new(@model.classes)
-    prediction = @model.predict_probablility(create_example, probabilities)
+    prediction = @model.predict_probability(create_example, probabilities)
     prediction.should_not be_nil
     probabilities.each { |e| e.should_not be_nil }
   end
