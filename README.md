@@ -1,5 +1,6 @@
 # rb-libsvm -- Ruby language bindings for LIBSVM
 
+[![Gem Version](https://badge.fury.io/rb/rb-libsvm.png)](http://badge.fury.io/rb/rb-libsvm)
 [![Build Status](https://secure.travis-ci.org/febeling/rb-libsvm.png)](http://travis-ci.org/febeling/rb-libsvm)
 
 This package provides a Ruby bindings to the [LIBSVM][] library.  SVM
