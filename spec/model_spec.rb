@@ -96,6 +96,7 @@ describe "An Libsvm model" do
   it "can predict probability" do
     prediction, probabilities = @model.predict_probability(create_example)
     prediction.should_not be_nil
+    probabilities.should have(@model.classes).items
     probabilities.each { |e| e.should_not be_nil }
   end
 end
