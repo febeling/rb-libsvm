@@ -98,11 +98,4 @@ describe "An Libsvm model" do
     prediction.should_not be_nil
     probabilities.each { |e| e.should_not be_nil }
   end
-  it "can predict probability with nil array" do
-    prediction = @model.predict(create_example) do |probabilities|
-      probabilities.should be_all { |p| p.kind_of? Float }
-      probabilities.count.should == @model.classes
-    end
-    prediction.should be_a Float
-  end
 end

@@ -348,11 +348,13 @@ static VALUE cModel_predict(VALUE obj,VALUE example) {
   return rb_float_new(class);
 }
 
-static VALUE cModel_predict_probability(VALUE obj,VALUE example,VALUE estimates) {
+static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
   struct svm_node *x;
   struct svm_model *model;
   double class;
   double *c_estimates;
+  VALUE estimates;
+  VALUE target;
   int i;
 
   x = example_to_internal(example);
@@ -364,12 +366,16 @@ static VALUE cModel_predict_probability(VALUE obj,VALUE example,VALUE estimates)
 
   class = svm_predict_probability(model, x, c_estimates);
 
+  estimates = rb_ary_new();
   for (i = 0; i < model->nr_class; i++)
-    rb_ary_store(estimates, i, rx_from_double(c_estimates[i]));
+    rb_ary_push(estimates, rx_from_double(c_estimates[i]));
 
   free(c_estimates);
 
-  return rb_float_new(class);
+  target = rb_ary_new();
+  rb_ary_push(target, rb_float_new(class));
+  rb_ary_push(target, estimates);
+  return target;
 }
 
 static VALUE cModel_save(VALUE obj, VALUE filename)
@@ -485,7 +491,7 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "svm_type", cModel_svm_type, 0);
   rb_define_method(cModel, "classes", cModel_classes, 0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
-  rb_define_method(cModel, "predict_probability", cModel_predict_probability, 2);
+  rb_define_method(cModel, "predict_probability", cModel_predict_probability, 1);
 
   /*
   Not covered, for various reasons:
