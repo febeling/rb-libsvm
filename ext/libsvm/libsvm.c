@@ -493,15 +493,6 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "predict", cModel_predict, 1);
   rb_define_method(cModel, "predict_probability", cModel_predict_probability, 1);
 
-  /*
-  Not covered, for various reasons:
-    TODO - void svm_get_labels(const struct svm_model *model, int *label); 
-    SVR? - double svm_get_svr_probability(const struct svm_model *model);
-    Model holds reference to this, so when to use it?
-           void svm_destroy_param(struct svm_parameter *param);
-    SVR? - int svm_check_probability_model(const struct svm_model *model);
-  */
-
   mKernelType = rb_define_module_under(mLibsvm, "KernelType");
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
   rb_define_const(mKernelType, "POLY", INT2NUM(POLY));
