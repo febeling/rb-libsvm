@@ -93,6 +93,7 @@ describe "An Libsvm model" do
     prediction = @model.predict(create_example)
     prediction.should_not be_nil
   end
+
   it "can predict probability" do
     prediction, probabilities = @model.predict_probability(create_example)
     prediction.should_not be_nil
