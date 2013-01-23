@@ -84,8 +84,8 @@ Written by C. Florian Ebeling.
 ## Contributors
 
 [Rimas Silkaitis](https://github.com/neovintage)
-
 [Aleksander Pohl](https://github.com/apohllo)
+[Andreas Eger](https://github.com/sch1zo)
 
 ## License
 
