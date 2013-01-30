@@ -79,7 +79,7 @@ gem's name (`rb-libsvm`).
 
 ## Author
 
-Written by C. Florian Ebeling.
+Written by [C. Florian Ebeling](https://github.com/febeling).
 
 ## Contributors
 
