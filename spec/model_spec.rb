@@ -22,6 +22,9 @@ module ModelSpecHelper
     parameter.eps = 0.01
     parameter.c = 10
     parameter.probability = 1
+    parameter.kernel_type = Libsvm::KernelType::LINEAR
+    parameter.shrinking = 0
+    parameter.degree = 1
     parameter
   end
 
