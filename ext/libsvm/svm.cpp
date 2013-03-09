@@ -2747,6 +2747,7 @@ svm_model *svm_load_model(const char *model_file_name)
 	model->probB = NULL;
 	model->label = NULL;
 	model->nSV = NULL;
+    model->sv_indices = NULL;
 
 	char cmd[81];
 	while(1)
