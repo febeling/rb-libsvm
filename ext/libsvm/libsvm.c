@@ -390,7 +390,7 @@ static VALUE cModel_save(VALUE obj, VALUE filename)
   Data_Get_Struct(obj, struct svm_model, model);
   path = StringValueCStr(filename);
 
-  if(rc = svm_save_model(path, model)) {
+  if((rc = svm_save_model(path, model))) {
     rb_raise(rb_eStandardError, "Error on saving model, code: %i", rc);
   }
 
