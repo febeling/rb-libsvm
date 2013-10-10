@@ -27,7 +27,7 @@ static struct svm_node *node_new() {
     return NULL;
   return n;
 }
-	
+
 static void node_free(struct svm_node *n) {
   free(n);
 }
@@ -37,13 +37,13 @@ static VALUE node_alloc(VALUE cls) {
   n = node_new();
   if(n == NULL)
     rb_raise(rb_eNoMemError, "Not enough memory for allocating Node.");
-  
+
   return Data_Wrap_Struct(cls, 0, node_free, n);
 }
 
 rx_def_accessor(cNode,struct svm_node,int,index);
 rx_def_accessor(cNode,struct svm_node,double,value);
- 
+
 /* Libsvm::Problem */
 static struct svm_problem *problem_new() {
   struct svm_problem *n;
@@ -54,7 +54,7 @@ static struct svm_problem *problem_new() {
 }
 
 static void problem_free(struct svm_problem *n) {
-  /* 
+  /*
      Deliberate no-op, because of this note from the README:
 
      `*NOTE* Because svm_model contains pointers to svm_problem, you can
@@ -109,7 +109,7 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
   if(x == 0) {
     rb_raise(rb_eNoMemError, "%s:%i", __FILE__,__LINE__);
   }
-  
+
   for(i = 0; i < num; ++i) {
     nodes_ary =     rb_ary_entry(examples_ary,i);
     *(x+i) = example_to_internal(nodes_ary);
@@ -118,7 +118,7 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
   return x;
 }
 
-/* 
+/*
    call-seq:
      problem.set_examples(labels, examples_array)
 
@@ -129,7 +129,7 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
    of lables (or classifications) and examples (or feature vectors).
    If those 2 don't match in length and ArgumentError is raised.
 */
-static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary) 
+static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary)
 {
   struct svm_problem *prob;
   int i;
@@ -140,8 +140,8 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
     rb_raise(rb_eArgError, "Number of labels (%i) does not match number of features (%i).", num, rx_ary_size(examples_ary));
   }
 
-  Data_Get_Struct(obj, struct svm_problem, prob); 
-  
+  Data_Get_Struct(obj, struct svm_problem, prob);
+
   if(prob->l > 0) {
     free(prob->y);
     for(i = 0; i < num; ++i) {
@@ -165,12 +165,12 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
   return INT2FIX(num);
 }
 
-/* 
+/*
    call-seq:
    labels, array_of_arrays = problem.examples
 
    double *y; // class/label of the example
-   struct svm_node **x; 
+   struct svm_node **x;
 */
 static VALUE cProblem_examples(VALUE problem) {
   struct svm_problem *prob;
@@ -180,11 +180,11 @@ static VALUE cProblem_examples(VALUE problem) {
   VALUE labels_ary, examples_ary, example_ary, v_node, result;
   int i;
 
-  Data_Get_Struct(problem, struct svm_problem, prob); 
+  Data_Get_Struct(problem, struct svm_problem, prob);
 
   labels_ary = rb_ary_new2(prob->l);
   examples_ary = rb_ary_new2(prob->l);
-  
+
   features = calloc(prob->l, sizeof(struct svm_node));
   if(features == 0) {
     rb_raise(rb_eNoMemError, "on allocating Libsvm::Node" " %s:%i", __FILE__,__LINE__);
@@ -225,7 +225,7 @@ static struct svm_parameter *parameter_new() {
     return NULL;
   return n;
 }
-	
+
 static void parameter_free(struct svm_parameter *n) {
   //  svm_destroy_param(n);
   free(n);
@@ -236,7 +236,7 @@ static VALUE parameter_alloc(VALUE cls) {
   n = parameter_new();
   if(n == NULL)
     rb_raise(rb_eNoMemError, "Not enough memory for allocating SvmParameter.");
-  
+
   return Data_Wrap_Struct(cls, 0, parameter_free, n);
 }
 
@@ -259,7 +259,7 @@ rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
     nr_weight is the number of elements in the array weight_label and
     weight. Each weight[i] corresponds to weight_label[i], meaning that
     the penalty of class weight_label[i] is scaled by a factor of weight[i].
-    
+
     If you do not want to change penalty for any of the classes,
     just set nr_weight to 0.
 
@@ -285,7 +285,7 @@ static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
   for(i = 0; i < param->nr_weight; ++i) {
     key = rb_ary_entry(keys,i);
     val = rb_hash_aref(weight_hash,key);
-    
+
     param->weight_label[i] = NUM2INT(key);
     param->weight[i] = NUM2DBL(val);
   }
@@ -294,12 +294,12 @@ static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
 }
 
 static VALUE cSvmParameter_label_weights(VALUE obj) {
-  struct svm_parameter *param; 
+  struct svm_parameter *param;
   int i;
   VALUE hash,key,val;
 
   Data_Get_Struct(obj,struct svm_parameter,param);
-  
+
   hash = rb_hash_new();
 
   for(i = 0; i < param->nr_weight; ++i) {
@@ -326,7 +326,7 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
 
   Data_Get_Struct(problem, struct svm_problem, prob);
   Data_Get_Struct(parameter, struct svm_parameter, param);
-  
+
   check_error = svm_check_parameter(prob, param);
   if(check_error != NULL) {
     rb_raise(rb_eArgError, "Parameters not valid for Problem: '%s'", check_error);
@@ -385,15 +385,15 @@ static VALUE cModel_save(VALUE obj, VALUE filename)
 {
   const struct svm_model *model;
   const char *path;
-  int rc; 
+  int rc;
 
   Data_Get_Struct(obj, struct svm_model, model);
   path = StringValueCStr(filename);
-  
+
   if(rc = svm_save_model(path, model)) {
     rb_raise(rb_eStandardError, "Error on saving model, code: %i", rc);
   }
-  
+
   return Qnil;
 }
 
@@ -404,7 +404,7 @@ static VALUE cModel_svm_type(VALUE obj)
   return INT2NUM(svm_get_svm_type(model));
 }
 
-static VALUE cModel_classes(VALUE obj) 
+static VALUE cModel_classes(VALUE obj)
 {
   const struct svm_model *model;
   Data_Get_Struct(obj, struct svm_model, model);
@@ -430,7 +430,7 @@ static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE param
 
   Data_Get_Struct(problem, struct svm_problem, prob);
   Data_Get_Struct(parameter, struct svm_parameter, param);
-  
+
   nr_fold = NUM2INT(num_fold);
 
   target = rb_ary_new2(prob->l);

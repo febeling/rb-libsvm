@@ -38,5 +38,3 @@
   NUM2INT(rb_funcall((ary), rb_intern("size"), 0))
 #define rx_hash_size(hsh)				\
   NUM2INT(rb_funcall((hsh), rb_intern("size"), 0))
-
-
