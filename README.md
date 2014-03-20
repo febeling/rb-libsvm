@@ -77,6 +77,9 @@ gem 'rb-libsvm', require: 'libsvm'
 This is because the loadable name (`libsvm`) is different from the
 gem's name (`rb-libsvm`).
 
+There is a JRuby variant of this gem named
+[jrb-libsvm](https://github.com/sch1zo/jrb-libsvm) by Andreas Eger.
+
 ## Author
 
 Written by [C. Florian Ebeling](https://github.com/febeling).
