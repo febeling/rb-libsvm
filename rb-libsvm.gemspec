@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/febeling/rb-libsvm"
   s.summary     = %q{Ruby language bindings for LIBSVM}
   s.description = %q{libsvm and ruby without using swig}
+  s.required_ruby_version = '>= 1.8.7'
 
   s.rubyforge_project = "rb-libsvm"
 
@@ -18,7 +19,6 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # specify any dependencies here; for example:
   s.add_development_dependency('rake-compiler')
   s.add_development_dependency('rspec', '>= 2.7.0')
 
