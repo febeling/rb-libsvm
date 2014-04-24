@@ -2,6 +2,7 @@ require 'mkmf'
 
 $CFLAGS << " -save-temps -ggdb3 " if ENV['DEBUG']
 $LDFLAGS << " -lstdc++ "
+$CPPFLAGS << " -DDEBUG " if ENV['DEBUG']
 
 HEADER_DIRS = []
 LIB_DIRS = []
