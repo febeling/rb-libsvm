@@ -110,4 +110,4 @@ http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/
 
 [ruby-svm]:     http://sourceforge.net/projects/rubysvm/
 
-[README]:       https://github.com/febeling/libsvm/blob/master/README
+[README]:       https://github.com/cjlin1/libsvm/blob/master/README
