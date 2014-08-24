@@ -9,9 +9,9 @@ module ModelSpecHelper
   def create_problem
     problem = Problem.new
     features = [Node.features([0.2,0.3,0.4,0.4]),
-                Node.features([0.1,0.5,0.1,0.9]),
-                Node.features([0.2,0.2,0.6,0.5]),
-                Node.features([0.3,0.1,0.5,0.9])]
+      Node.features([0.1,0.5,0.1,0.9]),
+      Node.features([0.2,0.2,0.6,0.5]),
+      Node.features([0.3,0.1,0.5,0.9])]
     problem.set_examples([1,2,1,2], features)
     problem
   end
@@ -39,13 +39,21 @@ describe "The Libsvm::Model class interface" do
   end
 
   it "results from training on a problem under a certain parameter set" do
-    model = Model.train(@problem,@parameter)
-    model.should_not be_nil
+    expect(Model.train(@problem, @parameter)).not_to be_nil
   end
 
+  let(:labels) { Model.cross_validation(@problem, @parameter, fold=2) }
+
   it "can do cross-validation" do
-    labels = Model.cross_validation(@problem, @parameter, fold=2)
-    labels.should == [anything, anything, anything, anything]
+    expect(labels).to contain_exactly(
+      an_instance_of(Float),
+      an_instance_of(Float),
+      an_instance_of(Float),
+      an_instance_of(Float))
+  end
+
+  it "number of labels" do
+    expect(labels.length).to eq(4)
   end
 end
 
@@ -59,8 +67,7 @@ describe "A saved model" do
   end
 
   it "can be loaded" do
-    model = Model.load(@filename)
-    model.should_not be_nil
+    expect(Model.load(@filename)).to be_an_instance_of(Model)
   end
 
   after(:each) do
@@ -79,28 +86,45 @@ describe "An Libsvm model" do
     File.delete(@file_path) if File.exists?(@file_path)
   end
 
-  it "can be saved to a file" do
-    @model.save(@file_path)
-    File.exist?(@file_path).should be_true
+  describe "basic operations" do
+    it "can be saved to a file" do
+      expect {
+        @model.save(@file_path)
+      }.to change { File.exist?(@file_path) }.from(false).to(true)
+    end
+
+    it "can be asked for its svm_type" do
+      expect(@model.svm_type).to eq SvmType::C_SVC
+    end
+
+    it "can be asked for its number of classes (aka. labels)" do
+      expect(@model.classes).to eq(2)
+    end
   end
 
-  it "can be asked for it's svm_type" do
-    @model.svm_type.should == SvmType::C_SVC
+  describe "predict" do
+    it "returns floats" do
+      expect(@model.predict(create_example)).to be_an_instance_of(Float)
+    end
   end
 
-  it "can be asked for it's number of classes (aka. labels)" do
-    @model.classes.should == 2
-  end
+  describe "predict_probability" do
+    let(:result) { @model.predict_probability(create_example) }
+    let(:prediction) { result.first }
+    let(:probabilities) { result.last }
 
-  it "can predict" do
-    prediction = @model.predict(create_example)
-    prediction.should_not be_nil
-  end
+    it "produces prediction" do
+      expect(prediction).not_to be_nil
+    end
 
-  it "can predict probability" do
-    prediction, probabilities = @model.predict_probability(create_example)
-    prediction.should_not be_nil
-    probabilities.should have(@model.classes).items
-    probabilities.each { |e| e.should_not be_nil }
+    it "produces probabilities for each class" do
+      expect(probabilities.length).to eq(@model.classes)
+    end
+
+    it "can predict probability" do
+      probabilities.each do |p|
+        expect(p).to be_an_instance_of(Float)
+      end
+    end
   end
 end
