@@ -5,20 +5,20 @@ describe "construction of a Node" do
     n = Node.new
     n.index = 11
     n.value = 0.11
-    n.index.should == 11
-    n.value.should be_within(0.0001).of(0.11)
+    expect(n.index).to eq 11
+    expect(n.value).to be_within(0.0001).of(0.11)
   end
 
   it "using the :[] method" do
     n = Node[12, 0.12]
-    n.index.should == 12
-    n.value.should be_within(0.00001).of(0.12)
+    expect(n.index).to eq 12
+    expect(n.value).to be_within(0.00001).of(0.12)
   end
 
   it "using the constructor parameters" do
     n = Node.new(14, 0.14)
-    n.index.should == 14
-    n.value.should be_within(0.0001).of(0.14)
+    expect(n.index).to eq 14
+    expect(n.value).to be_within(0.0001).of(0.14)
   end
 end
 
