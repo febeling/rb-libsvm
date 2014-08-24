@@ -9,7 +9,11 @@ popular free implementation of it, written by Chih-Chung Chang and
 Chih-Jen Lin, of National Taiwan University, Taipei. See the book ["Programming
 Collective Intelligence,"](http://books.google.com/books?id=fEsZ3Ey-Hq4C) among others, for a usage example.
 
-Note: There exist two other Ruby bindings for LIBSVM. One is named
+There is a JRuby implementation of this gem named
+[jrb-libsvm](https://github.com/sch1zo/jrb-libsvm) by
+[Andreas Eger](https://github.com/sch1zo).
+
+Note: There exist some other Ruby bindings for LIBSVM. One is named
 [Ruby SVM][ruby-svm], written by Rudi Cilibrasi. The other, more
 actively developed one is [libsvm-ruby-swig][svmrubyswig] by Tom Zeng,
 which is built using SWIG.
@@ -76,9 +80,6 @@ gem 'rb-libsvm', require: 'libsvm'
 
 This is because the loadable name (`libsvm`) is different from the
 gem's name (`rb-libsvm`).
-
-There is a JRuby variant of this gem named
-[jrb-libsvm](https://github.com/sch1zo/jrb-libsvm) by Andreas Eger.
 
 ## Author
 
