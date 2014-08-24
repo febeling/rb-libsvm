@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["C. Florian Ebeling", "Rimas Silkaitis"]
   s.email       = ["florian.ebeling@gmail.com", "neovintage@gmail.com"]
   s.homepage    = "https://github.com/febeling/rb-libsvm"
-  s.summary     = %q{Ruby language bindings for LIBSVM}
-  s.description = %q{libsvm and ruby without using swig}
+  s.summary     = %q{Ruby bindings for LIBSVM}
+  s.description = %q{Self-contained LIBSVM package for Ruby (that doesn't use SWIG). LIBSVM is a popular implementation of SVM, a machine learning classifier.}
   s.required_ruby_version = '>= 1.8.7'
 
   s.rubyforge_project = "rb-libsvm"
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency('rake-compiler')
-  s.add_development_dependency('rspec', '>= 2.7.0')
+  s.add_development_dependency('rspec', '>= 3.7.0')
 
   s.extensions << 'ext/libsvm/extconf.rb'
 end
