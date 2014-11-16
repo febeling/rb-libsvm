@@ -411,6 +411,15 @@ static VALUE cModel_classes_count(VALUE obj)
   return INT2NUM(svm_get_nr_class(model));
 }
 
+/*
+ * Returns the number of the support vectors the model contains.
+ *
+ * This method binds to the function
+ * svm_get_nr_sv[https://github.com/cjlin1/libsvm/blob/master/README#L555]
+ * with the mode struct as an argument.
+ *
+ *   model.support_vectors_count # => 3
+ */
 static VALUE cModel_support_vectors_count(VALUE obj)
 {
   const struct svm_model *model;
