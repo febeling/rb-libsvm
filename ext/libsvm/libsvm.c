@@ -404,6 +404,13 @@ static VALUE cModel_svm_type(VALUE obj)
   return INT2NUM(svm_get_svm_type(model));
 }
 
+/*
+ * Return the nubmer of classes the model is configured and trained to
+ * predict. For single-class or regression models 2 is returned.
+ *
+ * This method binds to the function
+ * svm_get_nr_class[https://github.com/cjlin1/libsvm/blob/master/README#L538].
+ */
 static VALUE cModel_classes_count(VALUE obj)
 {
   const struct svm_model *model;
