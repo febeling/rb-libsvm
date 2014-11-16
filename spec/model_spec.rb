@@ -75,7 +75,7 @@ describe "A saved model" do
   end
 end
 
-describe "An Libsvm model" do
+describe "A Libsvm model" do
   include ModelSpecHelper
 
   before(:each) do
