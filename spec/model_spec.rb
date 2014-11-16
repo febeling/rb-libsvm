@@ -108,6 +108,12 @@ describe "A Libsvm model" do
     end
   end
 
+  describe "support_vectors" do
+    it "returns count" do
+      expect(@model.support_vectors).to eq(3)
+    end
+  end
+
   describe "predict_probability" do
     let(:result) { @model.predict_probability(create_example) }
     let(:prediction) { result.first }
