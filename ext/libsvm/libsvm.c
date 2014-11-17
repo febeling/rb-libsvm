@@ -404,14 +404,14 @@ static VALUE cModel_svm_type(VALUE obj)
   return INT2NUM(svm_get_svm_type(model));
 }
 
-static VALUE cModel_classes(VALUE obj)
+static VALUE cModel_classes_count(VALUE obj)
 {
   const struct svm_model *model;
   Data_Get_Struct(obj, struct svm_model, model);
   return INT2NUM(svm_get_nr_class(model));
 }
 
-static VALUE cModel_support_vectors(VALUE obj)
+static VALUE cModel_support_vectors_count(VALUE obj)
 {
   const struct svm_model *model;
   Data_Get_Struct(obj, struct svm_model, model);
@@ -499,8 +499,8 @@ void Init_libsvm_ext() {
   rb_define_singleton_method(cModel, "load", cModel_class_load, 1);
   rb_define_method(cModel, "save", cModel_save, 1);
   rb_define_method(cModel, "svm_type", cModel_svm_type, 0);
-  rb_define_method(cModel, "classes", cModel_classes, 0);
-  rb_define_method(cModel, "support_vectors", cModel_support_vectors, 0);
+  rb_define_method(cModel, "classes_count", cModel_classes_count, 0);
+  rb_define_method(cModel, "support_vectors_count", cModel_support_vectors_count, 0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
   rb_define_method(cModel, "predict_probability", cModel_predict_probability, 1);
 

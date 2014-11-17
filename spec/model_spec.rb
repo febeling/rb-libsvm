@@ -98,7 +98,7 @@ describe "A Libsvm model" do
     end
 
     it "can be asked for its number of classes (aka. labels)" do
-      expect(@model.classes).to eq(2)
+      expect(@model.classes_count).to eq(2)
     end
   end
 
@@ -108,9 +108,9 @@ describe "A Libsvm model" do
     end
   end
 
-  describe "support_vectors" do
+  describe "support_vectors_count" do
     it "returns count" do
-      expect(@model.support_vectors).to eq(3)
+      expect(@model.support_vectors_count).to eq(3)
     end
   end
 
@@ -124,7 +124,7 @@ describe "A Libsvm model" do
     end
 
     it "produces probabilities for each class" do
-      expect(probabilities.length).to eq(@model.classes)
+      expect(probabilities.length).to eq(@model.classes_count)
     end
 
     it "can predict probability" do
