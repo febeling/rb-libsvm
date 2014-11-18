@@ -316,8 +316,20 @@ rx_def_accessor(cSvmParameter,struct svm_parameter,double,p);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,shrinking);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,probability);
 
-/*  Libsvm::Model  */
-
+/* call-seq:
+ *   Model.train(problem, parameter)
+ *
+ * Train a model with given training set (problem) and training
+ * parameter object.
+ *
+ * Library function
+ * svm_train[https://github.com/cjlin1/libsvm/blob/master/README#L313]
+ *
+ * @param [Libsvm::Problem] the training set (problem)
+ * @param [Libsvm::SvmParameter] training parameter object
+ *
+ * @return [Libsvm::Model] the trained model
+ */
 static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   const struct svm_problem *prob;
   const struct svm_parameter *param;
@@ -336,6 +348,19 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
+/* call-seq:
+ *   model.predict(example)
+ *
+ * Classify an example and return the class (label).
+ *
+ * This is the class (label) value for a classifier model or the
+ * funtion value for a regression model. 1 or -1 for one-class model.
+ *
+ * Library function
+ * svm_predict[https://github.com/cjlin1/libsvm/blob/master/README#L511].
+ *
+ * @return [Float] predicted class label
+ */
 static VALUE cModel_predict(VALUE obj,VALUE example) {
   struct svm_node *x;
   struct svm_model *model;
@@ -350,6 +375,22 @@ static VALUE cModel_predict(VALUE obj,VALUE example) {
   return rb_float_new(class);
 }
 
+/* call-seq:
+ *   model.predict_probability(example)
+ *
+ * Classify an example and return both the label (or regression
+ * value), as well as the array of probability found for each class.
+ *
+ * The first element of the returned array contains the label. The
+ * second element is another array which contains the probability
+ * value found for each model class.
+ *
+ * Library function
+ * svm_predict_probability[https://github.com/cjlin1/libsvm/blob/master/README#L591].
+ *
+ * @return [Array<Float, Array<Float>>] predicted label and
+ *   probability per class
+ */
 static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
   struct svm_node *x;
   struct svm_model *model;
