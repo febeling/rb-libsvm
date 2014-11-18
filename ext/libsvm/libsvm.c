@@ -381,6 +381,17 @@ static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
   return target;
 }
 
+/* call-seq:
+ *   model.save(filename)
+ *
+ * Saves the model to file `filename`. The format is the LIBSVM
+ * internal model representation.
+ *
+ * Library function
+ * svm_save_model[https://github.com/cjlin1/libsvm/blob/master/README#L621].
+ *
+ * @return [nil]
+ */
 static VALUE cModel_save(VALUE obj, VALUE filename)
 {
   const struct svm_model *model;
@@ -397,6 +408,14 @@ static VALUE cModel_save(VALUE obj, VALUE filename)
   return Qnil;
 }
 
+/* Type of the model. Integer value, one of the constants in the
+ * {Libsvm::SvmType} module.
+ *
+ * Library function
+ * svm_get_svm_type[https://github.com/cjlin1/libsvm/blob/master/README#L533].
+ *
+ * @return [C_SVC, NU_SVC, ONE_CLASS, EPSILON_SVR, NU_SVR]
+ */
 static VALUE cModel_svm_type(VALUE obj)
 {
   const struct svm_model *model;
@@ -404,12 +423,13 @@ static VALUE cModel_svm_type(VALUE obj)
   return INT2NUM(svm_get_svm_type(model));
 }
 
-/*
- * Return the nubmer of classes the model is configured and trained to
+/* Number of classes the model is configured and trained to
  * predict. For single-class or regression models 2 is returned.
  *
- * This method binds to the function
+ * Library function
  * svm_get_nr_class[https://github.com/cjlin1/libsvm/blob/master/README#L538].
+ *
+ * @return [Integer] the number of classes
  */
 static VALUE cModel_classes_count(VALUE obj)
 {
@@ -419,13 +439,12 @@ static VALUE cModel_classes_count(VALUE obj)
 }
 
 /*
- * Returns the number of the support vectors the model contains.
+ * Number of the support vectors the model contains.
  *
  * This method binds to the function
- * svm_get_nr_sv[https://github.com/cjlin1/libsvm/blob/master/README#L555]
- * with the mode struct as an argument.
+ * svm_get_nr_sv[https://github.com/cjlin1/libsvm/blob/master/README#L555].
  *
- *   model.support_vectors_count # => 3
+ * @return [Integer] the number of support vectors
  */
 static VALUE cModel_support_vectors_count(VALUE obj)
 {
@@ -434,6 +453,17 @@ static VALUE cModel_support_vectors_count(VALUE obj)
   return INT2NUM(svm_get_nr_sv(model));
 }
 
+/* call-seq:
+ *   Model.load(filename)         # => model
+ *
+ * Load a {Libsvm::Model} from a file
+ *
+ * This load a model from file `filename`. Format is the LIBSVM
+ * internal file representation of the model.
+ *
+ * @param filename [String] name of the model file
+ * @return [Libsvm::Model] the model
+ */
 static VALUE cModel_class_load(VALUE cls, VALUE filename)
 {
   struct svm_model *model;
@@ -443,6 +473,17 @@ static VALUE cModel_class_load(VALUE cls, VALUE filename)
   return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
+/* call-seq:
+ *   Model.cross_validation(problem, parameter, num_fold)
+ *
+ * Perform a cross-validation with num_fold split of the training data
+ * contained in problem.
+ *
+ * @param problem [Libsvm::Problem] the training set
+ * @param parameter [Libsvm::SvmParameter] training parameters object
+ * @param num_fold [Integer] the number of splits to devide the traning set into
+ * @return [Array<Integer>] the labels for each instance in training set
+ */
 static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE parameter, VALUE num_fold)
 {
   const struct svm_problem *prob;
