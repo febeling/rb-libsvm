@@ -47,12 +47,14 @@ describe "A Node" do
     ary = Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
     ary.map {|n| n.class.should == Node}
     ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
+    ary.map {|n| n.index }.should == [0, 1, 2, 3, 4]
   end
 
   it "class can create nodes from variable parameters" do
     ary = Node.features(0.1, 0.2, 0.3, 0.4, 0.5)
     ary.map {|n| Node.should === n }
     ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
+    ary.map {|n| n.index }.should == [0, 1, 2, 3, 4]
   end
 
   it "class can create nodes from hash" do
