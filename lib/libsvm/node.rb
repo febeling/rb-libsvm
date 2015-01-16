@@ -98,5 +98,12 @@ module Libsvm
     def ==(other)
       index == other.index && value == other.value
     end
+
+    def inspect # :nodoc:
+      vars = %w(index value).map { |name|
+        "#{name}=#{send(name)}"
+      }.join(", ")
+      "#<#{self.class}: #{vars}>"
+    end
   end
 end
