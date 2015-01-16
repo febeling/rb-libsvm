@@ -602,11 +602,31 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "predict", cModel_predict, 1);
   rb_define_method(cModel, "predict_probability", cModel_predict_probability, 1);
 
+  /**
+   * Module with constants for values that are allowed for
+   * {Libsvm::SvmParameter#kernel_type}. The value controls what kind
+   * of kernel is used when training the model.
+   */
   mKernelType = rb_define_module_under(mLibsvm, "KernelType");
+  /**
+   * A linear kernel
+   */
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
+  /**
+   * A polynomial kernel
+   */
   rb_define_const(mKernelType, "POLY", INT2NUM(POLY));
+  /**
+   * A redial basis function kernel
+   */
   rb_define_const(mKernelType, "RBF", INT2NUM(RBF));
+  /**
+   * A sigmoid kernel
+   */
   rb_define_const(mKernelType, "SIGMOID", INT2NUM(SIGMOID));
+  /**
+   * A precomputed kernel
+   */
   rb_define_const(mKernelType, "PRECOMPUTED", INT2NUM(PRECOMPUTED));
 
   mSvmType = rb_define_module_under(mLibsvm,"SvmType");
