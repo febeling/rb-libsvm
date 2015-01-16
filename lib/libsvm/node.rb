@@ -17,11 +17,16 @@ module Libsvm
       # of float values.
       #
       # Indices are converted to Integer, values are converted to
-      # Float. When passed a variable number of Float values, the
-      # index is implied by the arguments position. Collection
-      # arguments afford sparse feature arrays.
+      # Float. When passed a variable number of Float values or an
+      # array of Floast, the index is implied by the arguments
+      # position. Collection of tuples of hash arguments afford sparse
+      # feature arrays. These can represent features which don't have
+      # consecutive indices starting at zero.
       #
       # @overload features(0.3, 0.7, 0.8, ...)
+      # @param vararg variable number of value arguments, or
+      #
+      # @overload features([0.3, 0.7, 0.8, ...])
       # @param array an array of values, or
       #
       # @overload features([[0, 0.3], [1, 0.7], [2, 0.8], ...])
@@ -30,7 +35,7 @@ module Libsvm
       # @overload features(0 => 0.3, 1 => 0.7, 2 => 0.8, 99 => 0.1)
       # @param hash a hash from index to value
       #
-      # @return [[Libsvm::Node]] example, i.e. an array of features
+      # @return [Array<Libsvm::Node>] example, i.e. an array of features
       def features(*vargs)
         array_of_nodes = []
         if vargs.size == 1
@@ -63,9 +68,9 @@ module Libsvm
 
       # Create a feature node.
       #
-      #   Libsvm::Node[0, 1.1] => #<Libsvm::Node:0x007fa58bb841c8>
+      #   Libsvm::Node[0, 1.1] # => #<Libsvm::Node: index=0, value=1.1>
       #
-      # @return (Libsvm::Node)
+      # @return [Libsvm::Node]
       def [](index, value)
         new(index, value)
       end
@@ -79,7 +84,7 @@ module Libsvm
 
     # Create a new feature node.
     #
-    #   Libsvm::Node.new(0, 1.1) => #<Libsvm::Node:0x007fa58bb84180>
+    #   Libsvm::Node.new(0, 1.1) # => #<Libsvm::Node: index=0, value=1.1>
     def initialize(index=0, value=0.0)
       self.index = index
       self.value = value
