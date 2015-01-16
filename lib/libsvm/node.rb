@@ -34,12 +34,20 @@ module Libsvm
       def features(*vargs)
         array_of_nodes = []
         if vargs.size == 1
-          if vargs.first.class == Array
-            vargs.first.each_with_index do |value, index|
-              array_of_nodes << Node.new(index.to_i, value.to_f)
+          argument = vargs.first
+          if argument.class == Array
+            case argument.first
+            when Array
+              argument.each do |pair|
+                array_of_nodes << Node.new(pair.first.to_i, pair.last.to_f)
+              end
+            else
+              argument.each_with_index do |value, index|
+                array_of_nodes << Node.new(index.to_i, value.to_f)
+              end
             end
-          elsif vargs.first.class == Hash
-            vargs.first.each do |index, value|
+          elsif argument.class == Hash
+            argument.each do |index, value|
               array_of_nodes << Node.new(index.to_i, value.to_f)
             end
           else
