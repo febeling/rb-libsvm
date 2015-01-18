@@ -11,3 +11,5 @@ tags
 *~
 /.rbx
 /vendor
+/.yardoc/
+/doc/

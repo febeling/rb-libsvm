@@ -85,7 +85,7 @@ static struct svm_node *example_to_internal(VALUE example_ary)
   if(x == 0) {
     rb_raise(rb_eNoMemError, "on Libsvm::Node allocation" " %s:%i", __FILE__,__LINE__);
   }
-  /* loop it's element nodes */
+  /* loop its element nodes */
   for(j = 0; j < example_ary_len; ++j) {
     node = rb_ary_entry(example_ary,j);
     Data_Get_Struct(node,struct svm_node,node_struct);
@@ -122,12 +122,12 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
    call-seq:
      problem.set_examples(labels, examples_array)
 
-     double *y;            // class (aka. label) of the example
-     struct svm_node **x;  // examples
+   Sets the examples and their label for a training set.
 
-   This method sets the contents of an SVM Problem, which consists
-   of lables (or classifications) and examples (or feature vectors).
-   If those 2 don't match in length and ArgumentError is raised.
+   The indices of the arrays are supposed to correspond. If they don't
+   match in length an ArgumentError is raised.
+
+   @return [Integer] number of examples in the traning set
 */
 static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary)
 {
@@ -167,10 +167,14 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
 
 /*
    call-seq:
-   labels, array_of_arrays = problem.examples
+     problem.examples
 
-   double *y; // class/label of the example
-   struct svm_node **x;
+   Returns the array of labels and the array of corresponding examples
+   contained in this training set.
+
+     labels, array_of_examples = problem.examples
+
+   @return [[Array<Float>, Array<Array<Node>>]]
 */
 static VALUE cProblem_examples(VALUE problem) {
   struct svm_problem *prob;
@@ -249,21 +253,6 @@ rx_def_accessor(cSvmParameter,struct svm_parameter,double,cache_size);
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,eps);
 rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
 
-/*  Label weight.
-
-    nr_weight, weight_label, and weight are used to change the penalty
-    for some classes (If the weight for a class is not changed, it is
-    set to 1). This is useful for training classifier using unbalanced
-    input data or with asymmetric misclassification cost.
-
-    nr_weight is the number of elements in the array weight_label and
-    weight. Each weight[i] corresponds to weight_label[i], meaning that
-    the penalty of class weight_label[i] is scaled by a factor of weight[i].
-
-    If you do not want to change penalty for any of the classes,
-    just set nr_weight to 0.
-
-*/
 static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
   struct svm_parameter *param;
   int i;
@@ -316,8 +305,20 @@ rx_def_accessor(cSvmParameter,struct svm_parameter,double,p);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,shrinking);
 rx_def_accessor(cSvmParameter,struct svm_parameter,int,probability);
 
-/*  Libsvm::Model  */
-
+/* call-seq:
+ *   Model.train(problem, parameter)
+ *
+ * Train a model with given training set (problem) and training
+ * parameter object.
+ *
+ * Library function
+ * svm_train[https://github.com/cjlin1/libsvm/blob/master/README#L313]
+ *
+ * @param [Libsvm::Problem] the training set (problem)
+ * @param [Libsvm::SvmParameter] training parameter object
+ *
+ * @return [Libsvm::Model] the trained model
+ */
 static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   const struct svm_problem *prob;
   const struct svm_parameter *param;
@@ -336,6 +337,19 @@ static VALUE cModel_class_train(VALUE obj,VALUE problem,VALUE parameter) {
   return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
+/* call-seq:
+ *   model.predict(example)
+ *
+ * Classify an example and return the class (label).
+ *
+ * This is the class (label) value for a classifier model or the
+ * funtion value for a regression model. 1 or -1 for one-class model.
+ *
+ * Library function
+ * svm_predict[https://github.com/cjlin1/libsvm/blob/master/README#L511].
+ *
+ * @return [Float] predicted class label
+ */
 static VALUE cModel_predict(VALUE obj,VALUE example) {
   struct svm_node *x;
   struct svm_model *model;
@@ -350,6 +364,22 @@ static VALUE cModel_predict(VALUE obj,VALUE example) {
   return rb_float_new(class);
 }
 
+/* call-seq:
+ *   model.predict_probability(example)
+ *
+ * Classify an example and return both the label (or regression
+ * value), as well as the array of probability found for each class.
+ *
+ * The first element of the returned array contains the label. The
+ * second element is another array which contains the probability
+ * value found for each model class.
+ *
+ * Library function
+ * svm_predict_probability[https://github.com/cjlin1/libsvm/blob/master/README#L591].
+ *
+ * @return [Array<Float, Array<Float>>] predicted label and
+ *   probability per class
+ */
 static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
   struct svm_node *x;
   struct svm_model *model;
@@ -381,6 +411,15 @@ static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
   return target;
 }
 
+/* call-seq:
+ *   model.save(filename)
+ *
+ * Saves the model to file `filename`. The format is the LIBSVM
+ * internal model representation.
+ *
+ * Library function
+ * svm_save_model[https://github.com/cjlin1/libsvm/blob/master/README#L621].
+ */
 static VALUE cModel_save(VALUE obj, VALUE filename)
 {
   const struct svm_model *model;
@@ -397,6 +436,14 @@ static VALUE cModel_save(VALUE obj, VALUE filename)
   return Qnil;
 }
 
+/* Type of the model. Integer value, one of the constants in the
+ * {Libsvm::SvmType} module.
+ *
+ * Library function
+ * svm_get_svm_type[https://github.com/cjlin1/libsvm/blob/master/README#L533].
+ *
+ * @return [C_SVC, NU_SVC, ONE_CLASS, EPSILON_SVR, NU_SVR]
+ */
 static VALUE cModel_svm_type(VALUE obj)
 {
   const struct svm_model *model;
@@ -404,6 +451,14 @@ static VALUE cModel_svm_type(VALUE obj)
   return INT2NUM(svm_get_svm_type(model));
 }
 
+/* Number of classes the model is configured and trained to
+ * predict. For single-class or regression models 2 is returned.
+ *
+ * Library function
+ * svm_get_nr_class[https://github.com/cjlin1/libsvm/blob/master/README#L538].
+ *
+ * @return [Integer] the number of classes
+ */
 static VALUE cModel_classes_count(VALUE obj)
 {
   const struct svm_model *model;
@@ -411,6 +466,14 @@ static VALUE cModel_classes_count(VALUE obj)
   return INT2NUM(svm_get_nr_class(model));
 }
 
+/*
+ * Number of the support vectors the model contains.
+ *
+ * This method binds to the function
+ * svm_get_nr_sv[https://github.com/cjlin1/libsvm/blob/master/README#L555].
+ *
+ * @return [Integer] the number of support vectors
+ */
 static VALUE cModel_support_vectors_count(VALUE obj)
 {
   const struct svm_model *model;
@@ -418,6 +481,17 @@ static VALUE cModel_support_vectors_count(VALUE obj)
   return INT2NUM(svm_get_nr_sv(model));
 }
 
+/* call-seq:
+ *   Model.load(filename)         # => model
+ *
+ * Load a {Libsvm::Model} from a file
+ *
+ * This load a model from file `filename`. Format is the LIBSVM
+ * internal file representation of the model.
+ *
+ * @param filename [String] name of the model file
+ * @return [Libsvm::Model] the model
+ */
 static VALUE cModel_class_load(VALUE cls, VALUE filename)
 {
   struct svm_model *model;
@@ -427,6 +501,17 @@ static VALUE cModel_class_load(VALUE cls, VALUE filename)
   return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
+/* call-seq:
+ *   Model.cross_validation(problem, parameter, num_fold)
+ *
+ * Perform a cross-validation with num_fold split of the training data
+ * contained in problem.
+ *
+ * @param problem [Libsvm::Problem] the training set
+ * @param parameter [Libsvm::SvmParameter] training parameters object
+ * @param num_fold [Integer] the number of splits to devide the traning set into
+ * @return [Array<Integer>] the labels for each instance in training set
+ */
 static VALUE cModel_class_cross_validation(VALUE cls, VALUE problem, VALUE parameter, VALUE num_fold)
 {
   const struct svm_problem *prob;
@@ -504,11 +589,31 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "predict", cModel_predict, 1);
   rb_define_method(cModel, "predict_probability", cModel_predict_probability, 1);
 
+  /**
+   * Module with constants for values that are allowed for
+   * {Libsvm::SvmParameter#kernel_type}. The value controls what kind
+   * of kernel is used when training the model.
+   */
   mKernelType = rb_define_module_under(mLibsvm, "KernelType");
+  /**
+   * A linear kernel
+   */
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
+  /**
+   * A polynomial kernel
+   */
   rb_define_const(mKernelType, "POLY", INT2NUM(POLY));
+  /**
+   * A redial basis function kernel
+   */
   rb_define_const(mKernelType, "RBF", INT2NUM(RBF));
+  /**
+   * A sigmoid kernel
+   */
   rb_define_const(mKernelType, "SIGMOID", INT2NUM(SIGMOID));
+  /**
+   * A precomputed kernel
+   */
   rb_define_const(mKernelType, "PRECOMPUTED", INT2NUM(PRECOMPUTED));
 
   mSvmType = rb_define_module_under(mLibsvm,"SvmType");
