@@ -51,7 +51,7 @@ module Libsvm
 
     # @!attribute cache_size
     #
-    # Size of the kernel cache, in mega-bytes.
+    # Size of the kernel cache, in megabytes.
     #
     # @return [Integer]
 
