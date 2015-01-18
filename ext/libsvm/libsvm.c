@@ -249,21 +249,6 @@ rx_def_accessor(cSvmParameter,struct svm_parameter,double,cache_size);
 rx_def_accessor(cSvmParameter,struct svm_parameter,double,eps);
 rx_def_accessor_as(cSvmParameter,struct svm_parameter,double,C,c);
 
-/*  Label weight.
-
-    nr_weight, weight_label, and weight are used to change the penalty
-    for some classes (If the weight for a class is not changed, it is
-    set to 1). This is useful for training classifier using unbalanced
-    input data or with asymmetric misclassification cost.
-
-    nr_weight is the number of elements in the array weight_label and
-    weight. Each weight[i] corresponds to weight_label[i], meaning that
-    the penalty of class weight_label[i] is scaled by a factor of weight[i].
-
-    If you do not want to change penalty for any of the classes,
-    just set nr_weight to 0.
-
-*/
 static VALUE cSvmParameter_label_weights_set(VALUE obj,VALUE weight_hash) {
   struct svm_parameter *param;
   int i;
