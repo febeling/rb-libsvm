@@ -430,8 +430,6 @@ static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
  *
  * Library function
  * svm_save_model[https://github.com/cjlin1/libsvm/blob/master/README#L621].
- *
- * @return [nil]
  */
 static VALUE cModel_save(VALUE obj, VALUE filename)
 {
