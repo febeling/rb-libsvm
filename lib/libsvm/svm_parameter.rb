@@ -33,7 +33,7 @@ module Libsvm
     # Degree parameter, relevant for POLY kernel type.
     #
     # @see Libsvm::KernelType Libsvm::KernelType for kernel_type constants
-    # @return [Float]
+    # @return [Integer]
 
     # @!attribute gamma
     #
