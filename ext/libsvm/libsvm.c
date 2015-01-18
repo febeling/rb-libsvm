@@ -85,7 +85,7 @@ static struct svm_node *example_to_internal(VALUE example_ary)
   if(x == 0) {
     rb_raise(rb_eNoMemError, "on Libsvm::Node allocation" " %s:%i", __FILE__,__LINE__);
   }
-  /* loop it's element nodes */
+  /* loop its element nodes */
   for(j = 0; j < example_ary_len; ++j) {
     node = rb_ary_entry(example_ary,j);
     Data_Get_Struct(node,struct svm_node,node_struct);
@@ -122,12 +122,12 @@ static struct svm_node **examples_ary_to_internal(VALUE examples_ary)
    call-seq:
      problem.set_examples(labels, examples_array)
 
-     double *y;            // class (aka. label) of the example
-     struct svm_node **x;  // examples
+   Sets the examples and their label for a training set.
 
-   This method sets the contents of an SVM Problem, which consists
-   of lables (or classifications) and examples (or feature vectors).
-   If those 2 don't match in length and ArgumentError is raised.
+   The indices of the arrays are supposed to correspond. If they don't
+   match in length an ArgumentError is raised.
+
+   @return [Integer] number of examples in the traning set
 */
 static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary)
 {
@@ -167,10 +167,14 @@ static VALUE cProblem_examples_set(VALUE obj,VALUE labels_ary,VALUE examples_ary
 
 /*
    call-seq:
-   labels, array_of_arrays = problem.examples
+     problem.examples
 
-   double *y; // class/label of the example
-   struct svm_node **x;
+   Returns the array of labels and the array of corresponding examples
+   contained in this training set.
+
+     labels, array_of_examples = problem.examples
+
+   @return [[Array<Float>, Array<Array<Node>>]]
 */
 static VALUE cProblem_examples(VALUE problem) {
   struct svm_problem *prob;
