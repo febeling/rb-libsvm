@@ -28,43 +28,46 @@ describe "A Node" do
   end
 
   it "can be created" do
-    @node.should_not be_nil
+    expect(@node).not_to be_nil
   end
 
-  it "does not segfault on setting properties" do
+  it "has in :index property" do
     @node.index = 99
-    @node.index.should == 99
+    expect(@node.index).to eq(99)
+  end
+
+  it "has a :value porperty" do
     @node.value = 3.141
-    @node.value.should be_within(0.00001).of(3.141)
+    expect(@node.value).to be_within(0.00001).of(3.141)
   end
 
   it "has inited properties" do
-    @node.index.should == 0
-    @node.value.should be_within(0.00001).of(0)
+    expect(@node.index).to eq(0)
+    expect(@node.value).to be_within(0.00001).of(0)
   end
 
   it "class can create nodes from an array" do
     ary = Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
-    ary.map {|n| n.class.should == Node}
-    ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
-    ary.map {|n| n.index }.should == [0, 1, 2, 3, 4]
+    expect(ary).to all(be_a(Node))
+    expect(ary.map(&:value)).to eq([0.1, 0.2, 0.3, 0.4, 0.5])
+    expect(ary.map(&:index)).to eq([0, 1, 2, 3, 4])
   end
 
   it "class can create nodes from variable parameters" do
     ary = Node.features(0.1, 0.2, 0.3, 0.4, 0.5)
-    ary.map {|n| Node.should === n }
-    ary.map {|n| n.value }.should == [0.1, 0.2, 0.3, 0.4, 0.5]
-    ary.map {|n| n.index }.should == [0, 1, 2, 3, 4]
+    expect(ary).to all(be_a(Node))
+    expect(ary.map(&:value)).to eq([0.1, 0.2, 0.3, 0.4, 0.5])
+    expect(ary.map(&:index)).to eq([0, 1, 2, 3, 4])
   end
 
   it "class can create nodes from hash" do
     ary = Node.features(3=>0.3, 5=>0.5, 6=>0.6, 10=>1.0)
-    ary.map {|n| n.class.should == Node}
-    ary.map {|n| n.value }.sort.should == [0.3, 0.5, 0.6, 1.0]
-    ary.map {|n| n.index }.sort.should == [3, 5, 6, 10]
+    expect(ary).to all(be_a(Node))
+    expect(ary.map(&:value)).to eq([0.3, 0.5, 0.6, 1.0])
+    expect(ary.map(&:index)).to eq([3, 5, 6, 10])
   end
 
-  it "implements a value-like equality, not identity-notion" do
-    Node[1, 0.1].should == Node[1, 0.1]
+  it "implements value equality" do
+    expect(Node[1, 0.1]).to eq(Node[1, 0.1])
   end
 end

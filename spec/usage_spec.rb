@@ -15,7 +15,7 @@ describe "Basic usage" do
 
   it "has a nice API" do
     example = {11 => 0.11, 21 => 0.21, 101 => 0.99 }.to_example
-    example.should == Node.features({11 => 0.11, 21 => 0.21, 101 => 0.99 })
+    expect(example).to eq(Node.features({11 => 0.11, 21 => 0.21, 101 => 0.99 }))
   end
 
   it "is as in [PCI,217]" do
@@ -26,13 +26,13 @@ describe "Basic usage" do
     model = Model.train(@problem, @parameter)
 
     pred = model.predict(Node.features(1, 1, 1))
-    pred.should == 1.0
+    expect(pred).to eq(1.0)
 
     pred = model.predict(Node.features(-1, 1, -1))
-    pred.should == -1.0
+    expect(pred).to eq(-1.0)
 
     pred = model.predict(Node.features(-1, 55, -1))
-    pred.should == -1.0
+    expect(pred).to eq(-1.0)
   end
 
   it "kernel parameter use" do
@@ -42,6 +42,6 @@ describe "Basic usage" do
 
     model = Model.train(@problem, @parameter)
 
-    model.predict(Node.features(1, 2, 3)).should == 2
+    expect(model.predict(Node.features(1, 2, 3))).to eq(2)
   end
 end

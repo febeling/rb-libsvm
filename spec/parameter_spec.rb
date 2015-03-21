@@ -5,72 +5,71 @@ describe "A Parameter has accessors for" do
     @p = Libsvm::SvmParameter.new
   end
   it "int svm_type" do
-    SvmType::C_SVC.should == 0
+    expect(SvmType::C_SVC).to eq(0)
     @p.svm_type = SvmType::C_SVC
-    @p.svm_type.should == SvmType::C_SVC
+    expect(@p.svm_type).to eq(SvmType::C_SVC)
   end
 
   it "int kernel_type" do
-    KernelType::RBF.should == 2
+    expect(KernelType::RBF).to eq(2)
     @p.kernel_type = KernelType::RBF
-    @p.kernel_type.should == KernelType::RBF
+    expect(@p.kernel_type).to eq(KernelType::RBF)
   end
 
   it "int degree" do
     @p.degree = 99
-    @p.degree.should == 99
+    expect(@p.degree).to eq(99)
   end
 
   it "double gamma" do
     @p.gamma = 0.33
-    @p.gamma.should == 0.33
+    expect(@p.gamma).to eq(0.33)
   end
 
   it "double coef0" do
     @p.coef0 = 0.99
-    @p.coef0.should == 0.99
+    expect(@p.coef0).to eq(0.99)
   end
 
   it "double cache_size" do
     @p.cache_size = 0.77
-    @p.cache_size.should == 0.77
+    expect(@p.cache_size).to eq(0.77)
   end
 
   it "double eps" do
     @p.eps = 0.111
-    @p.eps.should == 0.111
+    expect(@p.eps).to eq(0.111)
     @p.eps = 0.112
-    @p.eps.should == 0.112
+    expect(@p.eps).to eq(0.112)
   end
 
   it "double C" do
     @p.c = 3.141
-    @p.c.should == 3.141
+    expect(@p.c).to eq(3.141)
   end
 
   it "can set and read weights (weight, weight_label, nr_weight members from struct)" do
-    @p.label_weights = {1=> 1.2, 3=>0.2, 5=>0.888}
-    @p.label_weights.should == {1=> 1.2, 3=>0.2, 5=>0.888}
+    @p.label_weights = {1 => 1.2, 3 => 0.2, 5 => 0.888}
+    expect(@p.label_weights).to eq({1 => 1.2, 3 => 0.2, 5 => 0.888})
   end
-
 
   it "double nu" do
     @p.nu = 1.1
-    @p.nu.should == 1.1
+    expect(@p.nu).to eq(1.1)
   end
 
   it "double p" do
     @p.p = 0.123
-    @p.p.should == 0.123
+    expect(@p.p).to eq(0.123)
   end
 
-  it "int shrinking" do
+  it "boolean-as-int shrinking" do
     @p.shrinking = 22
-    @p.shrinking.should == 22
+    expect(@p.shrinking).to eq(22)
   end
 
-  it "int probability" do
+  it "boolean-as-int probability" do
     @p.probability = 35
-    @p.probability.should == 35
+    expect(@p.probability).to eq(35)
   end
 end
