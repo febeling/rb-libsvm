@@ -49,22 +49,22 @@ describe "A Node" do
   it "class can create nodes from an array" do
     ary = Node.features([0.1, 0.2, 0.3, 0.4, 0.5])
     expect(ary).to all(be_a(Node))
-    expect(ary.map(&:value)).to eq([0.1, 0.2, 0.3, 0.4, 0.5])
-    expect(ary.map(&:index)).to eq([0, 1, 2, 3, 4])
+    expect(ary.map(&:value).sort).to eq([0.1, 0.2, 0.3, 0.4, 0.5])
+    expect(ary.map(&:index).sort).to eq([0, 1, 2, 3, 4])
   end
 
   it "class can create nodes from variable parameters" do
     ary = Node.features(0.1, 0.2, 0.3, 0.4, 0.5)
     expect(ary).to all(be_a(Node))
-    expect(ary.map(&:value)).to eq([0.1, 0.2, 0.3, 0.4, 0.5])
-    expect(ary.map(&:index)).to eq([0, 1, 2, 3, 4])
+    expect(ary.map(&:value).sort).to eq([0.1, 0.2, 0.3, 0.4, 0.5])
+    expect(ary.map(&:index).sort).to eq([0, 1, 2, 3, 4])
   end
 
   it "class can create nodes from hash" do
     ary = Node.features(3=>0.3, 5=>0.5, 6=>0.6, 10=>1.0)
     expect(ary).to all(be_a(Node))
-    expect(ary.map(&:value)).to eq([0.3, 0.5, 0.6, 1.0])
-    expect(ary.map(&:index)).to eq([3, 5, 6, 10])
+    expect(ary.map(&:value).sort).to eq([0.3, 0.5, 0.6, 1.0])
+    expect(ary.map(&:index).sort).to eq([3, 5, 6, 10])
   end
 
   it "compares with nil" do
