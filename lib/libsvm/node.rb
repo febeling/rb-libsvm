@@ -90,13 +90,15 @@ module Libsvm
       self.value = value
     end
 
-    # Compare features for equality.
+    # Compare feature node for equality.
     #
     # Nodes with equal index and value are equal.
     #
     # @return [Boolean]
-    def ==(other)
-      index == other.index && value == other.value
+    def == (other)
+      other.class == self.class &&
+        index == other.index &&
+        value == other.value
     end
 
     def inspect

@@ -67,6 +67,10 @@ describe "A Node" do
     expect(ary.map(&:index)).to eq([3, 5, 6, 10])
   end
 
+  it "compares with nil" do
+    expect(Node.new(1,2)).to_not eq(nil)
+  end
+
   it "implements value equality" do
     expect(Node[1, 0.1]).to eq(Node[1, 0.1])
   end
