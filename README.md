@@ -22,7 +22,7 @@ LIBSVM includes a number of command line tools for preprocessing
 training data and finding parameters. These tools are not included in
 this gem. You should install the original package if you need them.
 
-It is helpful to consult the [README][] of the LIBSVM package for
+It is helpful to consult the [README of the LIBSVM][README] package for
 reference when configuring the training parameters.
 
 Currently this package includes libsvm version 3.20.
