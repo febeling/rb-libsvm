@@ -484,7 +484,7 @@ static VALUE cModel_support_vectors_count(VALUE obj)
 /* call-seq:
  *   Model.load(filename)         # => model
  *
- * Load a {Libsvm::Model} from a file
+ * Load a {Libsvm::Model} from a file.
  *
  * This load a model from file `filename`. Format is the LIBSVM
  * internal file representation of the model.
@@ -596,23 +596,23 @@ void Init_libsvm_ext() {
    */
   mKernelType = rb_define_module_under(mLibsvm, "KernelType");
   /**
-   * A linear kernel
+   * A linear kernel; or not using a kernel.
    */
   rb_define_const(mKernelType, "LINEAR", INT2NUM(LINEAR));
   /**
-   * A polynomial kernel
+   * A polynomial kernel.
    */
   rb_define_const(mKernelType, "POLY", INT2NUM(POLY));
   /**
-   * A redial basis function kernel
+   * A radial basis function kernel.
    */
   rb_define_const(mKernelType, "RBF", INT2NUM(RBF));
   /**
-   * A sigmoid kernel
+   * A sigmoid kernel.
    */
   rb_define_const(mKernelType, "SIGMOID", INT2NUM(SIGMOID));
   /**
-   * A precomputed kernel
+   * A precomputed kernel.
    */
   rb_define_const(mKernelType, "PRECOMPUTED", INT2NUM(PRECOMPUTED));
 

@@ -2,7 +2,7 @@ module Libsvm
   # This file only contains documentation comments. See
   # ext/libsvm/libsvm.c for implementation.
 
-  # Represents a training set (alternatively called problem).
+  # Represents a training set (alternatively called `problem').
   #
   # In contains labels and examples in equal number.
   #
@@ -13,7 +13,7 @@ module Libsvm
     # @!attribute [r] l
     #
     # The number of labels and examples in this traning set. (The name
-    # is lower case L.)
+    # is lowercase-L.)
     #
     # @return [Integer]
   end

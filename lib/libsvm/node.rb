@@ -1,5 +1,5 @@
 module Libsvm
-  # Represents a feature
+  # This class represents a feature.
   #
   # A feature has an index and a value.
   #
@@ -77,10 +77,10 @@ module Libsvm
     end
 
     # @!attribute index
-    #   The index identifies the feature for which this node represents a value
+    #   The index identifies the feature for which this node represents a value.
 
     # @!attribute value
-    #   The value of this feature in this instance
+    #   The value of this feature in this instance.
 
     # Create a new feature node.
     #
@@ -99,7 +99,7 @@ module Libsvm
       index == other.index && value == other.value
     end
 
-    def inspect # :nodoc:
+    def inspect
       vars = %w(index value).map { |name|
         "#{name}=#{send(name)}"
       }.join(", ")
