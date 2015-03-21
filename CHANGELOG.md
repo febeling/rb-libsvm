@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix a bug in `Libsvm::Node#==` when comparing with `nil`.
 
+### Changed
+- Complete transition to `expect` specs.
+
 ## [1.3.1] - 2015-03-21
 ### Fixed
 - Spelling and punctuation in documentation comments
