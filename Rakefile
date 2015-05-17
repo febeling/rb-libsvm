@@ -8,10 +8,12 @@ TAG = 'v320'
 
 task :default => :spec
 
-task :compile => [:download, :patch]
+task :compile => [:prepare]
 
 LIBSVM_SOURCES = FileList['ext/libsvm/svm.cpp',
                           'ext/libsvm/svm.h']
+
+task :prepare => [:download, :patch]
 
 task :download => LIBSVM_SOURCES
 CLEAN.include(LIBSVM_SOURCES)
@@ -33,6 +35,12 @@ Rake::Task[:spec].prerequisites << :compile
 CLEAN << 'doc'
 CLEAN << 'TAGS'
 CLEAN << 'Gemfile.lock'
+
+task :patch do
+  LIBSVM_SOURCES.each do |file|
+    patch(file) if File.exists?(patch_name(file))
+  end
+end
 
 # Download file from LIBSVM and place it in the default location. The
 # basename is expected to exist in the LIBSVM base directory.
@@ -57,22 +65,23 @@ def download(url, dest)
   File.open(file, 'wb') do |f|
     f.write(content)
   end
-  patch(file) if File.exists?(patch_name(file))
 end
 
-# Apply a patch to a file. The patch is expected to be created a
-# command following this pattern:
+# Apply a patch to a file. The patch can be created following this
+# protocol:
 #
-#   git diff -u --patch ext/libsvm/svm.cpp > patches/ext_libsvm_svm.cpp.patch
+#   cp ext/libsvm/svm.cpp orig/ext/libsvm
+#   # edit `ext/libsvm/svm.cpp`, then re-create patch with
+#   diff -u orig/ext/libsvm/svm.cpp ext/libsvm/svm.cpp > patches/ext_libsvm_svm.cpp.patch
 #
 # The name of the patch is derived from the name of the file to patch,
 # by sustituting slashes with underscores.
 #
 # @param name {String} name of the patched file, e.g. 'ext/libsvm/svm.cpp'
 def patch(name)
-  sh "patch -p1 < patches/#{patch_name(name)}"
+  sh "patch -p1 < #{patch_name(name)}"
 end
 
 def patch_name(name)
-  name.tr('/', '_') + '.patch'
+  File.join('patches', name.tr('/', '_') + '.patch')
 end
