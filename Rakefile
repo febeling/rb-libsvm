@@ -58,12 +58,16 @@ end
 # @param url {String} the URL to load
 # @param dest {String} name of directory
 def download(url, dest)
-  uri      = URI(url)
-  content  = Net::HTTP.get(uri)
-  basename = File.basename(url)
-  file     = File.join(dest, basename)
+  uri              = URI(url)
+  http             = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl     = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+  response         = http.request(Net::HTTP::Get.new(uri.request_uri))
+  basename         = File.basename(url)
+  file             = File.join(dest, basename)
+
   File.open(file, 'wb') do |f|
-    f.write(content)
+    f.write(response.body)
   end
 end
 
