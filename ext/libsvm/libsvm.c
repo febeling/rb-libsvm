@@ -490,6 +490,8 @@ static VALUE cModel_support_vectors_count(VALUE obj)
  * internal file representation of the model.
  *
  * @param filename [String] name of the model file
+ * @raise [IOError] if the model can't be loaded,
+ *   e.g. because the model path doesn't point to a model
  * @return [Libsvm::Model] the model
  */
 static VALUE cModel_class_load(VALUE cls, VALUE filename)
@@ -498,6 +500,9 @@ static VALUE cModel_class_load(VALUE cls, VALUE filename)
   char *path;
   path = StringValueCStr(filename);
   model = svm_load_model(path);
+  if(model == NULL) {
+    rb_raise(rb_eIOError, "unable to load model from file: \"%s\"", path);
+  }
   return Data_Wrap_Struct(cModel, 0, model_free, model);
 }
 
