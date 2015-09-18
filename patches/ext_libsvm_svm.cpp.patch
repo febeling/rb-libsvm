@@ -1,0 +1,11 @@
+--- orig/ext/libsvm/svm.cpp	2015-05-17 14:26:49.000000000 +0200
++++ ext/libsvm/svm.cpp	2015-05-17 14:30:06.000000000 +0200
+@@ -44,7 +44,7 @@
+ 	fflush(stdout);
+ }
+ static void (*svm_print_string) (const char *) = &print_string_stdout;
+-#if 1
++#if 0
+ static void info(const char *fmt,...)
+ {
+ 	char buf[BUFSIZ];
