@@ -70,6 +70,10 @@ describe "A saved model" do
     expect(Model.load(@filename)).to be_an_instance_of(Model)
   end
 
+  it "missing model raises exception" do
+    expect{Model.load("missing.model")}.to raise_error(IOError, /unable to load model from file: "missing.model"/)
+  end
+
   after(:each) do
     File.delete(@filename) rescue nil
   end
