@@ -40,7 +40,8 @@ module Libsvm
         array_of_nodes = []
         if vargs.size == 1
           argument = vargs.first
-          if argument.class == Array
+          case argument
+          when Array
             case argument.first
             when Array
               argument.each do |pair|
@@ -51,7 +52,7 @@ module Libsvm
                 array_of_nodes << Node.new(index.to_i, value.to_f)
               end
             end
-          elsif argument.class == Hash
+          when Hash
             argument.each do |index, value|
               array_of_nodes << Node.new(index.to_i, value.to_f)
             end
