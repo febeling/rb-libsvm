@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["florian.ebeling@gmail.com", "neovintage@gmail.com"]
   s.homepage    = "https://github.com/febeling/rb-libsvm"
   s.summary     = %q{Ruby bindings for LIBSVM}
-  s.description = %q{Self-contained LIBSVM package for Ruby (that doesn't use SWIG). LIBSVM is a popular implementation of SVM, a machine learning classifier.}
+  s.description = %q{Self-contained LIBSVM package for Ruby. LIBSVM is a popular implementation of SVM, a machine learning algorithm.}
   s.required_ruby_version = '>= 1.8.7'
 
   s.rubyforge_project = "rb-libsvm"
