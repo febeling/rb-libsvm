@@ -14,12 +14,9 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "rb-libsvm"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
-
-  s.add_development_dependency('rake-compiler')
+  s.add_development_dependency "rake", "~> 10.0.0"
+  s.add_development_dependency('rake-compiler', '~> 0.9.5')
+  s.add_development_dependency('rake-compiler-dock', '~> 0.4.0')
   s.add_development_dependency('rspec', '>= 3.0.0')
 
   s.extensions << 'ext/libsvm/extconf.rb'
