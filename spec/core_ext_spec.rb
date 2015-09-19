@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'libsvm/core_ext'
 
 describe "Create examples" do
   it "from a hash" do
@@ -6,8 +7,8 @@ describe "Create examples" do
     expect(example).to eq(Node.features({11 => 0.11, 21 => 0.21, 101 => 0.99 }).sort_by(&:index))
   end
 
-  describe "from an array of tuples" do
-    it "can create example from array of pairs" do
+  describe "from an array of pairs" do
+    it "can create example" do
       example = [ [11, 0.11], [21, 0.21], [101, 0.99] ].to_example
       expect(example).to eq(Node.features({11 => 0.11, 21 => 0.21, 101 => 0.99 }).sort_by(&:index))
     end

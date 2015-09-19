@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Changed
+- No longer loading core extensions to Hash and Array by default. Load them as 'libsvm/core_ext' or separately as 'libsvm/core_ext/hash' and 'libsvm/core_ext/array'.
+
 ## [1.4.0] - 2015-09-18
 ### Changed
 - Complete transition to `expect` specs.
