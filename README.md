@@ -1,4 +1,5 @@
 # rb-libsvm -- Ruby language bindings for LIBSVM
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/febeling/rb-libsvm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Gem Version](https://badge.fury.io/rb/rb-libsvm.png)](http://badge.fury.io/rb/rb-libsvm)
 [![Build Status](https://secure.travis-ci.org/febeling/rb-libsvm.png)](http://travis-ci.org/febeling/rb-libsvm)
