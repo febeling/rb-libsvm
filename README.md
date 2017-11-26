@@ -101,6 +101,8 @@ the license in the file LIBSVM-LICENSE.
 
 ### Posts about using SVMs with Ruby
 
+https://www.practicalai.io/implementing-classification-using-a-svm-in-ruby/
+
 http://neovintage.blogspot.com/2011/11/text-classification-using-support.html
 
 http://www.igvita.com/2008/01/07/support-vector-machines-svm-in-ruby/
