@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Ruby bindings for LIBSVM}
   s.description = %q{Self-contained LIBSVM package for Ruby (that doesn't use SWIG). LIBSVM is a popular implementation of SVM, a machine learning classifier.}
   s.required_ruby_version = '>= 1.8.7'
+  s.licenses    = ['MIT']
 
   s.rubyforge_project = "rb-libsvm"
 
