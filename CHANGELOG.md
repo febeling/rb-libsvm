@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.4.2] - 2018-09-15
+## [1.4.3] - 2018-09-15
 ### Changed
 - Upgrade to LIBSVM 3.23
 
