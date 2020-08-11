@@ -3,5 +3,5 @@ rvm:
   - 2.2.7
   - 2.3.4
   - 2.5.1
-  - ruby-head
+  - 2.6.5
 sudo: false
