@@ -25,7 +25,7 @@ this gem. You should install the original package if you need them.
 It is helpful to consult the [README of the LIBSVM][README] package for
 reference when configuring the training parameters.
 
-Currently this package includes libsvm version 3.23.
+Currently this package includes libsvm version 3.24.
 
 ## Dependencies
 
