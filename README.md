@@ -91,8 +91,7 @@ number of steps.
 * update code and documentation
 * push
 * sign into https://rubygems.org/
-* save API token from https://rubygems.org/profile/edit and store in `.gem/credentials`
-* sign into from command line with `gem signin` to test automatic authentication
+* save API token from https://rubygems.org/profile/edit and store in `.gem/credentials` by running `gem signin`
 * perform actual release: `bundle exec rake release`
 
 ## Author
