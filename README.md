@@ -81,6 +81,20 @@ gem 'rb-libsvm', require: 'libsvm'
 This is because the loadable name (`libsvm`) is different from the
 gem's name (`rb-libsvm`).
 
+## Release
+
+The process to make a release of the gem package to rubygems.org has a
+number of steps. 
+
+* manually change the version in `lib/libsvm/version.rb`
+* clean, build, and run tests successfully
+* update code and documentation
+* push
+* sign into https://rubygems.org/
+* save API token from https://rubygems.org/profile/edit and store in `.gem/credentials`
+* sign into from command line with `gem signin` to test automatic authentication
+* perform actual release: `bundle exec rake release`
+
 ## Author
 
 Written by [C. Florian Ebeling](https://github.com/febeling).
