@@ -1,7 +1,6 @@
-# rb-libsvm -- Ruby language bindings for LIBSVM
+[![Gem Version](https://badge.fury.io/rb/rb-libsvm.svg)](http://badge.fury.io/rb/rb-libsvm)
 
-[![Gem Version](https://badge.fury.io/rb/rb-libsvm.png)](http://badge.fury.io/rb/rb-libsvm)
-[![Build Status](https://secure.travis-ci.org/febeling/rb-libsvm.png)](http://travis-ci.org/febeling/rb-libsvm)
+# rb-libsvm -- Ruby language bindings for LIBSVM
 
 This package provides Ruby bindings to the [LIBSVM][] library.  SVM
 is a machine learning and classification algorithm, and LIBSVM is a
